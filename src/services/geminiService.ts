@@ -153,6 +153,8 @@ export async function getTutorResponse(
   step: number,
   attempts: number,
   userName: string | null,
+  grade: string | null,
+  subject: string | null,
   apiKey?: string,
   image?: string // Base64 string
 ) {
@@ -173,6 +175,9 @@ export async function getTutorResponse(
   const prompt = `
 Bộ nhớ ngữ cảnh:
 Tên học sinh hiện tại: ${userName || "Chưa biết"}
+Học sinh đang học: ${grade || "Chưa rõ lớp"}
+Môn học đang cần hỗ trợ: ${subject || "Chưa rõ môn"}
+
 Lịch sử trò chuyện:
 ${historyString}
 
@@ -190,13 +195,14 @@ Lần thử thứ ${attempts}
 
 Nhiệm vụ:
 1. Nếu bạn chưa biết tên học sinh, hãy ưu tiên hỏi tên họ một cách tự nhiên.
-2. Nếu có hình ảnh, hãy phân tích bài toán trong hình một cách tỉ mỉ, chuyển đổi tất cả sang LaTeX.
-3. Phản hồi như một giáo viên thực thụ, bắt đầu bằng một câu hỏi gợi mở giúp học sinh tiến về phía trước.
-4. SỬ DỤNG XUỐNG DÒNG (line breaks) để phân tách các ý, không viết thành một đoạn văn dài.
-5. Tuân thủ nghiêm ngặt phương pháp Socratic: KHÔNG giải hộ, chỉ GỢI Ý bằng câu hỏi.
-6. Nếu học sinh vừa cung cấp tên, hãy trích xuất nó vào trường 'extractedName'.
-7. ĐẶC BIỆT: Nếu trình độ là 'intermediate' hoặc 'advanced' và học sinh đang ở lần thử thứ ${attempts} (>= 3), hãy cung cấp các gợi ý mang tính khái niệm sâu sắc hơn hoặc các định lý liên quan như đã nêu trong hướng dẫn hệ thống.
-8. ĐẢM BẢO: Tất cả các biểu thức toán học trong phản hồi của bạn đều sử dụng LaTeX ($...$ hoặc $$...$$).
+2. Dựa vào thông tin Lớp (${grade}) và Môn học (${subject}), hãy đưa ra các giải thích và câu hỏi gợi mở PHÙ HỢP với trình độ kiến thức của lớp đó. Tránh sử dụng các kiến thức vượt quá chương trình học của lớp hiện tại trừ khi học sinh yêu cầu.
+3. Nếu có hình ảnh, hãy phân tích bài toán trong hình một cách tỉ mỉ, chuyển đổi tất cả sang LaTeX.
+4. Phản hồi như một giáo viên thực thụ, bắt đầu bằng một câu hỏi gợi mở giúp học sinh tiến về phía trước.
+5. SỬ DỤNG XUỐNG DÒNG (line breaks) để phân tách các ý, không viết thành một đoạn văn dài.
+6. Tuân thủ nghiêm ngặt phương pháp Socratic: KHÔNG giải hộ, chỉ GỢI Ý bằng câu hỏi.
+7. Nếu học sinh vừa cung cấp tên, hãy trích xuất nó vào trường 'extractedName'.
+8. ĐẶC BIỆT: Nếu trình độ là 'intermediate' hoặc 'advanced' và học sinh đang ở lần thử thứ ${attempts} (>= 3), hãy cung cấp các gợi ý mang tính khái niệm sâu sắc hơn hoặc các định lý liên quan như đã nêu trong hướng dẫn hệ thống.
+9. ĐẢM BẢO: Tất cả các biểu thức toán học trong phản hồi của bạn đều sử dụng LaTeX ($...$ hoặc $$...$$).
 `;
 
   try {

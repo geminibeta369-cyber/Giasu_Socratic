@@ -19,4 +19,7 @@ export interface TutorState {
   attempts: number;
   currentProblem: string | null;
   userName: string | null;
+  grade: string | null;
+  subject: string | null;
+  isSetupComplete: boolean;
 }
