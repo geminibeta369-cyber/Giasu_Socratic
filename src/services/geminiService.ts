@@ -85,13 +85,6 @@ PHONG CÁCH
 - Tập trung vào tư duy, không phải học vẹt.
 
 =====================
-BÀI TẬP TƯƠNG TỰ (MỚI)
-=====================
-1. Dựa trên bài toán hiện tại học sinh đang giải, hãy tạo ra một bài tập tương tự (cùng dạng nhưng khác số liệu hoặc bối cảnh).
-2. Bài tập này giúp học sinh luyện tập thêm sau khi đã hiểu bài toán hiện tại.
-3. Cung cấp cả đề bài và hướng dẫn giải chi tiết cho bài tập tương tự này.
-
-=====================
 NHẬN DIỆN HÌNH ẢNH (QUAN TRỌNG)
 =====================
 1. Khi học sinh gửi hình ảnh, hãy phân tích kỹ các ký hiệu toán học, biểu đồ và số liệu.
@@ -99,13 +92,37 @@ NHẬN DIỆN HÌNH ẢNH (QUAN TRỌNG)
 3. Nếu hình ảnh mờ hoặc không rõ ràng, hãy lịch sự yêu cầu học sinh chụp lại hoặc nhập văn bản.
 
 =====================
+VẼ HÌNH HÌNH HỌC (MỚI)
+=====================
+1. Nếu bài toán yêu cầu vẽ hình hoặc nếu việc vẽ hình giúp học sinh dễ hiểu hơn, hãy cung cấp thông tin vẽ hình trong trường 'geometry'.
+2. Bạn là chuyên gia vẽ hình học sử dụng JSXGraph.
+3. Code JSXGraph phải hoàn chỉnh, sử dụng 'box' làm ID của board.
+4. Luôn tạo board với các tùy chọn hỗ trợ di chuyển và phóng to:
+   var board = JXG.JSXGraph.initBoard('box', {
+     boundingbox: [-5, 5, 5, -5],
+     axis: true,
+     grid: true,
+     showCopyright: false,
+     showNavigation: true,
+     keepaspectratio: true,
+     pan: { enabled: true, needShift: false },
+     zoom: { wheel: true, factorX: 1.2, factorY: 1.2 }
+   });
+5. Tên điểm rõ ràng (A, B, C...).
+6. QUAN TRỌNG: Các điểm phải được cố định (fixed: true) để học sinh không vô tình làm lệch hình khi kéo thả. Ví dụ: board.create('point', [0,0], {name:'A', fixed: true});
+7. Nếu có góc vuông → vẽ ký hiệu góc vuông.
+8. Hình phải cân đối, dễ nhìn.
+9. Luôn dùng: board.create('point', ...), board.create('line', ...), board.create('polygon', ...).
+
+=====================
 CÔNG THỨC TOÁN HỌC (QUAN TRỌNG)
 =====================
 1. LUÔN LUÔN sử dụng LaTeX để viết các công thức toán học.
 2. Sử dụng dấu đô la kép '$$ ... $$' cho các công thức nằm trên dòng riêng (block).
 3. Sử dụng dấu đô la đơn '$ ... $' cho các công thức nằm trong dòng văn bản (inline).
-4. Đảm bảo các công thức LaTeX được viết chính xác và dễ đọc.
-5. Ví dụ: 'Giải phương trình $x^2 + 2x + 1 = 0$' hoặc 'Ta có công thức: $$E = mc^2$$'.
+4. TRÌNH BÀY RÕ RÀNG: Luôn sử dụng xuống dòng (line breaks) giữa các bước giải. KHÔNG viết một đoạn văn dài liên tục. Mỗi bước giải hoặc mỗi ý quan trọng nên nằm trên một dòng mới.
+5. Đảm bảo các công thức LaTeX được viết chính xác và dễ đọc.
+6. Ví dụ: 'Giải phương trình $x^2 + 2x + 1 = 0$' hoặc 'Ta có công thức: $$E = mc^2$$'.
 
 =====================
 ĐỊNH DẠNG ĐẦU RA (RẤT QUAN TRỌNG)
@@ -114,7 +131,6 @@ CÔNG THỨC TOÁN HỌC (QUAN TRỌNG)
 Câu trả lời của bạn PHẢI tuân theo định dạng JSON với các trường sau:
 - 'text': Câu trả lời của gia sư (bao gồm câu hỏi gợi mở).
 - 'extractedName': Tên học sinh nếu có.
-- 'similarExercise': Một đối tượng chứa 'problem' (đề bài tương tự) và 'solutionGuide' (hướng dẫn giải cho đề bài đó).
 
 KHÔNG ĐƯỢC:
 - đưa ra câu trả lời cuối cùng cho bài toán hiện tại.
@@ -217,19 +233,15 @@ Nhiệm vụ:
               type: Type.STRING,
               description: "Tên của học sinh nếu họ vừa cung cấp nó, nếu không thì để trống."
             },
-            similarExercise: {
+            geometry: {
               type: Type.OBJECT,
               properties: {
-                problem: {
-                  type: Type.STRING,
-                  description: "Đề bài tương tự."
-                },
-                solutionGuide: {
-                  type: Type.STRING,
-                  description: "Hướng dẫn giải chi tiết cho đề bài tương tự."
-                }
+                description: { type: Type.STRING },
+                jsxgraph_code: { type: Type.STRING },
+                labels: { type: Type.ARRAY, items: { type: Type.STRING } },
+                explanation: { type: Type.STRING }
               },
-              required: ["problem", "solutionGuide"]
+              required: ["description", "jsxgraph_code", "labels", "explanation"]
             }
           },
           required: ["text"]
@@ -241,7 +253,7 @@ Nhiệm vụ:
     return {
       text: result.text || "Thầy xin lỗi, Thầy chưa thể tạo câu trả lời lúc này. Em hãy thử lại nhé.",
       extractedName: result.extractedName || null,
-      similarExercise: result.similarExercise || null
+      geometry: result.geometry || null
     };
   } catch (error) {
     console.error("Lỗi khi gọi Gemini:", error);

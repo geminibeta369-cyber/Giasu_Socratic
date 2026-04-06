@@ -4,9 +4,11 @@ export interface Message {
   role: 'user' | 'model';
   text: string;
   image?: string; // Optional base64 image
-  similarExercise?: {
-    problem: string;
-    solutionGuide: string;
+  geometry?: {
+    description: string;
+    jsxgraph_code: string;
+    labels: string[];
+    explanation: string;
   };
 }
 

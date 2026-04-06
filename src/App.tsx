@@ -22,6 +22,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { getTutorResponse } from "./services/geminiService";
 import { Message, Level, TutorState } from "./types";
+import GeometryBoard from "./components/GeometryBoard";
 
 const INITIAL_STATE: TutorState = {
   history: [],
@@ -89,9 +90,7 @@ const MATH_GROUPS = [
   }
 ];
 
-function MessageBubble({ msg }: { msg: Message }) {
-  const [showSolution, setShowSolution] = useState(false);
-
+function MessageBubble({ msg, id }: { msg: Message; id: string }) {
   return (
     <div className={`flex gap-2 md:gap-3 max-w-[90%] md:max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
       <div className={`flex-shrink-0 w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center ${
@@ -124,47 +123,24 @@ function MessageBubble({ msg }: { msg: Message }) {
           </ReactMarkdown>
         </div>
 
-        {msg.similarExercise && (
+        {msg.geometry && (
           <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
             <div className="flex items-center gap-2 text-brand-600 font-bold text-xs uppercase tracking-wider">
-              <BrainCircuit className="w-4 h-4" />
-              Bài tập tương tự gợi ý
+              <Calculator className="w-4 h-4" />
+              Hình vẽ minh họa
             </div>
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm italic text-slate-700">
-              <ReactMarkdown 
-                remarkPlugins={[remarkMath]} 
-                rehypePlugins={[rehypeKatex]}
-              >
-                {msg.similarExercise.problem}
-              </ReactMarkdown>
-            </div>
-            <button
-              onClick={() => setShowSolution(!showSolution)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              {showSolution ? "Ẩn hướng dẫn giải" : "Xem hướng dẫn giải"}
-            </button>
-            <AnimatePresence>
-              {showSolution && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
+            <GeometryBoard id={`board-${id}`} code={msg.geometry.jsxgraph_code} />
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[13px] text-slate-600 italic">
+              <span className="font-bold text-brand-600 not-italic block mb-1">Ghi chú:</span>
+              <div className="markdown-body">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkMath]} 
+                  rehypePlugins={[rehypeKatex]}
                 >
-                  <div className="p-3 bg-brand-50 rounded-xl border border-brand-100 text-sm text-slate-700">
-                    <div className="font-bold text-brand-700 mb-1 text-[10px] uppercase tracking-widest">Hướng dẫn giải:</div>
-                    <ReactMarkdown 
-                      remarkPlugins={[remarkMath]} 
-                      rehypePlugins={[rehypeKatex]}
-                    >
-                      {msg.similarExercise.solutionGuide}
-                    </ReactMarkdown>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {msg.geometry.explanation}
+                </ReactMarkdown>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -327,7 +303,7 @@ export default function App() {
 
     try {
       const activeKey = selectedKeyIdx !== null ? geminiKeys[selectedKeyIdx] : undefined;
-      const { text: responseText, extractedName, similarExercise } = await getTutorResponse(
+      const { text: responseText, extractedName, geometry } = await getTutorResponse(
         currentInput,
         state.history,
         state.level,
@@ -341,7 +317,7 @@ export default function App() {
       const tutorMessage: Message = { 
         role: "model", 
         text: responseText,
-        similarExercise: similarExercise || undefined
+        geometry: geometry || undefined
       };
       
       setState(prev => ({
@@ -529,7 +505,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <MessageBubble msg={msg} />
+              <MessageBubble msg={msg} id={idx.toString()} />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -737,6 +713,31 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* LaTeX Preview */}
+        <AnimatePresence>
+          {input.includes("$") && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mb-2 p-3 bg-white/80 backdrop-blur-sm border border-brand-100 rounded-xl shadow-sm overflow-x-auto custom-scrollbar"
+            >
+              <div className="text-[10px] font-bold text-brand-600 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+                Xem trước công thức
+              </div>
+              <div className="markdown-body text-sm md:text-base">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkMath]} 
+                  rehypePlugins={[rehypeKatex]}
+                >
+                  {input}
+                </ReactMarkdown>
               </div>
             </motion.div>
           )}
