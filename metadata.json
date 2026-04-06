@@ -1,6 +1,6 @@
 {
-  "name": "Gia sư Toán Socratic",
-  "description": "Gia sư toán học AI sử dụng phương pháp Socratic để hướng dẫn học sinh giải quyết vấn đề từng bước một.",
+  "name": "Gia sư Socratic (Thầy)",
+  "description": "Gia sư chuyên nghiệp cho tất cả các môn học, sử dụng phương pháp Socratic để hướng dẫn học sinh.",
   "requestFramePermissions": [
     "camera"
   ]

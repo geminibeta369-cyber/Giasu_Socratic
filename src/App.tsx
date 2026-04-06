@@ -83,6 +83,8 @@ const MATH_GROUPS = [
       { label: "∫", value: "\\int", type: "formula" },
       { label: "lim", value: "\\lim_{x \\to \\infty}", type: "formula" },
       { label: "∞", value: "\\infty", type: "formula" },
+      { label: "$...$", value: "$$", type: "formula" },
+      { label: "$$...$$", value: "$$$$", type: "formula" },
     ]
   }
 ];
@@ -262,6 +264,10 @@ export default function App() {
           offset = symbol.indexOf("{}") + 1;
         } else if (symbol.includes("()")) {
           offset = symbol.indexOf("()") + 1;
+        } else if (symbol === "$$") {
+          offset = 1;
+        } else if (symbol === "$$$$") {
+          offset = 2;
         }
         const newPos = start + offset;
         inputRef.current.setSelectionRange(newPos, newPos);
@@ -376,7 +382,7 @@ export default function App() {
           </div>
           <div>
             <h1 className="font-bold text-base md:text-lg leading-tight">
-              {state.userName ? `Chào, ${state.userName}!` : "Gia sư Toán Socratic"}
+              {state.userName ? `Chào, ${state.userName}!` : "Gia sư Socratic (Thầy)"}
             </h1>
             <p className="text-[10px] md:text-xs text-brand-100 flex items-center gap-1">
               <BrainCircuit className="w-3 h-3" />
@@ -509,7 +515,7 @@ export default function App() {
             <div className="max-w-xs px-4">
               <h2 className="text-lg md:text-xl font-bold text-slate-800">Sẵn sàng học chưa?</h2>
               <p className="text-sm text-slate-600 mt-2">
-                Nhập một bài toán hoặc gửi hình ảnh bài tập, tôi sẽ giúp bạn giải quyết từng bước một.
+                Nhập một bài tập hoặc gửi hình ảnh, Thầy sẽ giúp em giải quyết từng bước một.
               </p>
             </div>
           </div>
@@ -580,6 +586,31 @@ export default function App() {
               >
                 <X className="w-3 h-3" />
               </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Real-time LaTeX Preview */}
+        <AnimatePresence>
+          {input.includes("$") && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="mb-3 p-3 bg-brand-50/50 border border-brand-100 rounded-xl overflow-hidden"
+            >
+              <div className="text-[10px] font-bold text-brand-600 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <BrainCircuit className="w-3 h-3" />
+                Xem trước công thức
+              </div>
+              <div className="markdown-body text-slate-700">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkMath]} 
+                  rehypePlugins={[rehypeKatex]}
+                >
+                  {input}
+                </ReactMarkdown>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -740,7 +771,7 @@ export default function App() {
         </form>
         <p className="text-[10px] text-slate-400 mt-2.5 text-center flex items-center justify-center gap-1">
           <ChevronRight className="w-3 h-3" />
-          Tôi sẽ hướng dẫn bạn giải từng bước. Đừng hỏi đáp án nhé!
+          Thầy sẽ hướng dẫn em giải từng bước. Sử dụng $...$ cho công thức toán học.
         </p>
       </div>
     </div>
