@@ -1,0 +1,7 @@
+{
+  "name": "Gia sư Toán Socratic",
+  "description": "Gia sư toán học AI sử dụng phương pháp Socratic để hướng dẫn học sinh giải quyết vấn đề từng bước một.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
