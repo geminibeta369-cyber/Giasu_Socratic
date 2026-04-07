@@ -106,7 +106,8 @@ VẼ HÌNH HÌNH HỌC (MỚI)
      showNavigation: true,
      keepaspectratio: true,
      pan: { enabled: true, needShift: false },
-     zoom: { wheel: true, factorX: 1.2, factorY: 1.2 }
+     zoom: { wheel: true, pinch: true, factorX: 1.2, factorY: 1.2 },
+     browser: { touch: true }
    });
 5. Tên điểm rõ ràng (A, B, C...).
 6. QUAN TRỌNG: Các điểm phải được cố định (fixed: true) để học sinh không vô tình làm lệch hình khi kéo thả. Ví dụ: board.create('point', [0,0], {name:'A', fixed: true});
@@ -262,10 +263,7 @@ Nhiệm vụ:
       geometry: result.geometry || null
     };
   } catch (error) {
-    console.error("Lỗi khi gọi Gemini:", error);
-    return {
-      text: "Thầy đang gặp một chút khó khăn khi suy nghĩ. Em có thể thử diễn đạt lại câu trả lời hoặc gửi lại hình ảnh rõ hơn không?",
-      extractedName: null
-    };
+    // Re-throw the error so the caller can handle retries with different keys
+    throw error;
   }
 }

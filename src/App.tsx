@@ -314,9 +314,16 @@ export default function App() {
 
   const addGeminiKey = () => {
     if (newKey.trim()) {
-      const updated = [...geminiKeys, newKey.trim()];
-      setGeminiKeys(updated);
-      if (selectedKeyIdx === null) setSelectedKeyIdx(updated.length - 1);
+      const keysToAdd = newKey
+        .split("\n")
+        .map(k => k.trim())
+        .filter(k => k.length > 0 && !geminiKeys.includes(k));
+      
+      if (keysToAdd.length > 0) {
+        const updated = [...geminiKeys, ...keysToAdd];
+        setGeminiKeys(updated);
+        if (selectedKeyIdx === null) setSelectedKeyIdx(updated.length - keysToAdd.length);
+      }
       setNewKey("");
     }
   };
@@ -434,19 +441,61 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const activeKey = selectedKeyIdx !== null ? geminiKeys[selectedKeyIdx] : undefined;
-      const { text: responseText, extractedName, geometry } = await getTutorResponse(
-        currentInput,
-        state.history,
-        state.level,
-        state.step,
-        state.attempts,
-        state.userName,
-        state.grade,
-        state.subject,
-        activeKey,
-        currentImage || undefined
-      );
+      let responseText = "";
+      let extractedName = null;
+      let geometry = null;
+      let success = false;
+      let errorMsg = "";
+
+      // Try keys starting from the selected one
+      const startIndex = selectedKeyIdx !== null ? selectedKeyIdx : 0;
+      const keysToTry = geminiKeys.length > 0 ? geminiKeys : [undefined];
+      
+      for (let i = 0; i < keysToTry.length; i++) {
+        const currentIdx = (startIndex + i) % keysToTry.length;
+        const activeKey = keysToTry[currentIdx];
+        
+        try {
+          const result = await getTutorResponse(
+            currentInput,
+            state.history,
+            state.level,
+            state.step,
+            state.attempts,
+            state.userName,
+            state.grade,
+            state.subject,
+            activeKey,
+            currentImage || undefined
+          );
+          
+          // Check if the response indicates an API error (this is a bit tricky since getTutorResponse catches errors)
+          // We'll need to modify getTutorResponse to return an error flag or throw.
+          // For now, let's assume if it returns the "vui lòng cấu hình" message, it failed.
+          if (result.text.includes("cấu hình Gemini API Key") && keysToTry.length > 1) {
+            continue;
+          }
+
+          responseText = result.text;
+          extractedName = result.extractedName;
+          geometry = result.geometry;
+          success = true;
+          
+          // Update selected key if we successfully used a different one
+          if (currentIdx !== selectedKeyIdx && selectedKeyIdx !== null) {
+            setSelectedKeyIdx(currentIdx);
+          }
+          break;
+        } catch (err) {
+          console.error(`Lỗi với key ${currentIdx}:`, err);
+          errorMsg = err instanceof Error ? err.message : String(err);
+          if (i === keysToTry.length - 1) throw err;
+        }
+      }
+
+      if (!success) {
+        throw new Error(errorMsg || "Không thể kết nối với AI.");
+      }
 
       const tutorMessage: Message = { 
         role: "model", 
@@ -462,6 +511,14 @@ export default function App() {
       }));
     } catch (error) {
       console.error("Lỗi khi lấy phản hồi từ gia sư:", error);
+      const errorMessage: Message = {
+        role: "model",
+        text: "Thầy đang gặp một chút khó khăn khi suy nghĩ. Em có thể thử kiểm tra lại API Key hoặc diễn đạt lại câu hỏi nhé."
+      };
+      setState(prev => ({
+        ...prev,
+        history: [...newHistory, errorMessage]
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -650,21 +707,36 @@ export default function App() {
                   )}
                 </div>
 
-                <div className="flex gap-2 pt-2">
-                  <input 
-                    type="password"
+                <div className="flex flex-col gap-2 pt-2">
+                  <textarea 
                     value={newKey}
                     onChange={(e) => setNewKey(e.target.value)}
-                    placeholder="Dán API Key mới vào đây..."
-                    className="flex-1 px-4 py-3 bg-slate-50 border-2 border-slate-50 rounded-2xl text-sm focus:border-brand-200 focus:bg-white outline-none transition-all font-medium"
+                    placeholder="Dán một hoặc nhiều API Key (mỗi key một dòng)..."
+                    rows={3}
+                    className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-50 rounded-2xl text-sm focus:border-brand-200 focus:bg-white outline-none transition-all font-medium resize-none"
                   />
                   <button 
                     onClick={addGeminiKey}
                     disabled={!newKey.trim()}
-                    className="p-3 bg-brand-600 text-white rounded-2xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand-100"
+                    className="w-full py-3 bg-brand-600 text-white rounded-2xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand-100 flex items-center justify-center gap-2 font-bold"
                   >
-                    <Plus className="w-6 h-6" />
+                    <Plus className="w-5 h-5" />
+                    Thêm API Key
                   </button>
+                </div>
+
+                <div className="mt-6 p-5 bg-brand-50/50 rounded-[1.5rem] border border-brand-100/50">
+                  <h4 className="text-[11px] font-bold text-brand-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" />
+                    Hướng dẫn lấy API Key
+                  </h4>
+                  <ul className="space-y-2 text-xs text-slate-600 font-medium list-decimal pl-4">
+                    <li>Truy cập <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-brand-600 hover:underline">Google AI Studio</a>.</li>
+                    <li>Nhấn nút <b>"Create API key"</b>.</li>
+                    <li>Chọn dự án Google Cloud của bạn (hoặc tạo mới).</li>
+                    <li>Sao chép mã API Key và dán vào ô bên trên.</li>
+                    <li>Bạn có thể dán nhiều key cùng lúc, mỗi key một dòng để Thầy tự động chuyển đổi khi cần.</li>
+                  </ul>
                 </div>
               </div>
             </div>

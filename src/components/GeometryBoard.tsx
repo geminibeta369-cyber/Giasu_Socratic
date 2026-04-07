@@ -36,9 +36,27 @@ const GeometryBoard: React.FC<GeometryBoardProps> = ({ id, code }) => {
           showCopyright: false,
           showNavigation: true,
           pan: { enabled: true, needShift: false },
-          zoom: { wheel: true, factorX: 1.2, factorY: 1.2 }
+          zoom: { 
+            wheel: true, 
+            pinch: true,
+            factorX: 1.2, 
+            factorY: 1.2 
+          },
+          browser: { touch: true }
         });
+        
+        // Ensure all points are fixed by default unless explicitly allowed
+        // (This is a safety measure in case AI forgets fixed:true)
+        board.on('update', () => {
+          board.objectsList.forEach((obj: any) => {
+            if (obj.elType === 'point' && obj.getAttribute('fixed') === undefined) {
+              obj.setAttribute({ fixed: true });
+            }
+          });
+        });
+
         updateBoardVisibility(board, showAxis, showGrid);
+        board.update();
       }
     } catch (error) {
       console.error("Error rendering JSXGraph:", error);
