@@ -114,43 +114,43 @@ const GeometryBoard: React.FC<GeometryBoardProps> = ({ id, code }) => {
   };
 
   return (
-    <div className="w-full aspect-square max-w-[400px] mx-auto bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative group">
+    <div className="w-full aspect-square max-w-full md:max-w-[400px] mx-auto bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative group">
       <div id={id} className="w-full h-full jxgbox" />
       
       {/* Controls */}
-      <div className="absolute top-2 left-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-2 left-2 flex gap-1 md:gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
         <button 
           onClick={toggleAxis}
-          className={`p-1.5 rounded-lg border shadow-sm transition-all ${
+          className={`p-1 md:p-1.5 rounded-lg border shadow-sm transition-all ${
             showAxis ? 'bg-brand-600 text-white border-brand-700' : 'bg-white text-slate-400 border-slate-200'
           }`}
           title={showAxis ? "Ẩn hệ trục" : "Hiện hệ trục"}
         >
-          <Maximize className="w-3.5 h-3.5" />
+          <Maximize className="w-3 h-3 md:w-3.5 md:h-3.5" />
         </button>
         <button 
           onClick={toggleGrid}
-          className={`p-1.5 rounded-lg border shadow-sm transition-all ${
+          className={`p-1 md:p-1.5 rounded-lg border shadow-sm transition-all ${
             showGrid ? 'bg-brand-600 text-white border-brand-700' : 'bg-white text-slate-400 border-slate-200'
           }`}
           title={showGrid ? "Ẩn lưới" : "Hiện lưới"}
         >
-          <Grid3X3 className="w-3.5 h-3.5" />
+          <Grid3X3 className="w-3 h-3 md:w-3.5 md:h-3.5" />
         </button>
         <button 
           onClick={resetView}
-          className="p-1.5 rounded-lg border bg-white text-slate-400 border-slate-200 shadow-sm hover:text-brand-600 hover:border-brand-200 transition-all"
+          className="p-1 md:p-1.5 rounded-lg border bg-white text-slate-400 border-slate-200 shadow-sm hover:text-brand-600 hover:border-brand-200 transition-all"
           title="Đặt lại góc nhìn"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-3 h-3 md:w-3.5 md:h-3.5" />
         </button>
       </div>
 
-      <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-slate-400 border border-slate-100 uppercase tracking-widest pointer-events-none">
+      <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 rounded text-[8px] md:text-[10px] font-bold text-slate-400 border border-slate-100 uppercase tracking-widest pointer-events-none">
         JSXGraph Board
       </div>
       
-      <div className="absolute bottom-2 left-2 bg-white/60 backdrop-blur-sm px-2 py-1 rounded text-[8px] text-slate-400 pointer-events-none">
+      <div className="absolute bottom-2 left-2 bg-white/60 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 rounded text-[7px] md:text-[8px] text-slate-400 pointer-events-none">
         Kéo chuột để di chuyển • Cuộn để phóng to
       </div>
     </div>

@@ -14,12 +14,15 @@ import {
   Calculator,
   Plus,
   Trash2,
-  Key
+  Key,
+  Camera,
+  Upload
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import confetti from "canvas-confetti";
 import { getTutorResponse } from "./services/geminiService";
 import { Message, Level, TutorState } from "./types";
 import GeometryBoard from "./components/GeometryBoard";
@@ -109,70 +112,70 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
     <motion.div 
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="w-full max-w-md p-8 bg-white rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] border border-slate-100 relative overflow-hidden"
+      className="w-full max-w-md p-6 md:p-8 bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] border border-slate-100 relative overflow-hidden"
     >
       {/* Decorative background elements */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-50 rounded-full blur-3xl opacity-50" />
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent-50 rounded-full blur-3xl opacity-50" />
 
       <div className="relative z-10">
-        <div className="flex justify-center mb-8">
-          <div className="w-24 h-24 bg-gradient-to-br from-brand-50 to-brand-100 rounded-3xl flex items-center justify-center shadow-inner rotate-3">
-            <GraduationCap className="w-12 h-12 text-brand-600 -rotate-3" />
+        <div className="flex justify-center mb-6 md:mb-8">
+          <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-brand-50 to-brand-200 rounded-3xl flex items-center justify-center shadow-inner rotate-3">
+            <GraduationCap className="w-10 h-10 md:w-12 md:h-12 text-brand-600 -rotate-3" />
           </div>
         </div>
         
-        <h2 className="text-3xl font-bold text-slate-800 text-center mb-2 tracking-tight">Chào mừng em!</h2>
-        <p className="text-slate-500 text-center mb-10 text-sm font-medium">Hãy cho Thầy biết một chút về em để Thầy có thể hỗ trợ tốt nhất nhé.</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 text-center mb-2 tracking-tight">Chào mừng em!</h2>
+        <p className="text-slate-500 text-center mb-6 md:mb-10 text-xs md:text-sm font-medium">Hãy cho Thầy biết một chút về em để Thầy có thể hỗ trợ tốt nhất nhé.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Tên của em</label>
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          <div className="space-y-1.5 md:space-y-2">
+            <label className="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Tên của em</label>
             <input
               autoFocus
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ví dụ: Minh Anh"
-              className="w-full px-5 py-4 bg-slate-50/50 border-2 border-slate-100 rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium placeholder:text-slate-300"
+              className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium placeholder:text-slate-300 text-sm md:text-base"
               required
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Em học lớp mấy?</label>
+          <div className="grid grid-cols-2 gap-3 md:gap-5">
+            <div className="space-y-1.5 md:space-y-2">
+              <label className="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Khối lớp</label>
               <div className="relative">
                 <select
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}
-                  className="w-full px-5 py-4 bg-slate-50/50 border-2 border-slate-100 rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer"
+                  className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer text-sm md:text-base"
                 >
                   {[...Array(12)].map((_, i) => (
                     <option key={i} value={`Lớp ${i + 1}`}>Lớp {i + 1}</option>
                   ))}
                 </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                  <ChevronRight className="w-4 h-4 rotate-90" />
+                <div className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4 rotate-90" />
                 </div>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Môn học cần giúp?</label>
+            <div className="space-y-1.5 md:space-y-2">
+              <label className="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Môn học</label>
               <div className="relative">
                 <select
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-5 py-4 bg-slate-50/50 border-2 border-slate-100 rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer"
+                  className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer text-sm md:text-base"
                 >
                   <option value="Toán học">Toán học</option>
                   <option value="Vật lý">Vật lý</option>
                   <option value="Hóa học">Hóa học</option>
                   <option value="Tiếng Anh">Tiếng Anh</option>
                 </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                  <ChevronRight className="w-4 h-4 rotate-90" />
+                <div className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4 rotate-90" />
                 </div>
               </div>
             </div>
@@ -181,10 +184,10 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
           <button
             type="submit"
             disabled={!name.trim()}
-            className="w-full py-5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow-[0_20px_40px_-10px_rgba(13,148,136,0.3)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none mt-4 flex items-center justify-center gap-3 group"
+            className="w-full py-4 md:py-5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl md:rounded-2xl shadow-[0_20px_40px_-10px_rgba(124,58,237,0.3)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none mt-2 md:mt-4 flex items-center justify-center gap-2 md:gap-3 group text-sm md:text-base"
           >
             Bắt đầu học ngay
-            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </form>
       </div>
@@ -196,27 +199,27 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex gap-3 md:gap-5 max-w-[95%] md:max-w-[90%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
-      <div className={`flex-shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-[1.25rem] flex items-center justify-center shadow-sm relative overflow-hidden ${
+    <div className={`flex gap-2.5 md:gap-5 max-w-full md:max-w-[90%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+      <div className={`flex-shrink-0 w-8 h-8 md:w-12 md:h-12 rounded-xl md:rounded-[1.25rem] flex items-center justify-center shadow-sm relative overflow-hidden ${
         isUser ? "bg-brand-600 text-white" : "bg-white border border-slate-100 text-brand-600"
       }`}>
         {isUser ? (
-          <User className="w-5 h-5 md:w-6 md:h-6 relative z-10" />
+          <User className="w-4 h-4 md:w-6 md:h-6 relative z-10" />
         ) : (
           <>
             <div className="absolute inset-0 bg-brand-50 opacity-50" />
-            <Bot className="w-5 h-5 md:w-7 md:h-7 relative z-10" />
+            <Bot className="w-4 h-4 md:w-7 md:h-7 relative z-10" />
           </>
         )}
       </div>
       
-      <div className={`p-5 md:p-6 rounded-[2rem] shadow-sm space-y-4 md:space-y-5 relative ${
+      <div className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-sm space-y-3 md:space-y-5 relative ${
         isUser 
           ? "bg-brand-600 text-white rounded-tr-none shadow-brand-100/50" 
           : "bg-white border border-slate-50 text-slate-800 rounded-tl-none shadow-slate-100/50"
       }`}>
         {msg.image && (
-          <div className="rounded-2xl overflow-hidden border-4 border-white/10 max-w-sm shadow-xl">
+          <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white/10 max-w-sm shadow-xl">
             <img 
               src={msg.image} 
               alt="Bài tập" 
@@ -225,7 +228,7 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
             />
           </div>
         )}
-        <div className={`markdown-body ${isUser ? "text-white prose-invert" : "text-slate-700"} font-medium leading-relaxed`}>
+        <div className={`markdown-body ${isUser ? "text-white prose-invert" : "text-slate-700"} font-medium leading-relaxed text-sm md:text-[15px]`}>
           <ReactMarkdown 
             remarkPlugins={[remarkMath]} 
             rehypePlugins={[rehypeKatex]}
@@ -238,33 +241,33 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 pt-8 border-t border-slate-50 space-y-6"
+            className="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-slate-50 space-y-4 md:space-y-6"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 text-brand-600 font-bold text-[11px] uppercase tracking-[0.2em]">
-                <div className="p-2 bg-brand-50 rounded-xl">
-                  <Calculator className="w-4 h-4" />
+              <div className="flex items-center gap-2 md:gap-3 text-brand-600 font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">
+                <div className="p-1.5 md:p-2 bg-brand-50 rounded-lg md:rounded-xl">
+                  <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </div>
                 Hình vẽ minh họa
               </div>
-              <div className="px-3 py-1 bg-brand-50 text-brand-600 rounded-full text-[10px] font-bold uppercase tracking-wider">
+              <div className="px-2 md:px-3 py-0.5 md:py-1 bg-brand-50 text-brand-600 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider">
                 Interactive
               </div>
             </div>
 
-            <div className="rounded-[2rem] overflow-hidden border-4 border-slate-50 shadow-inner bg-white">
+            <div className="rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-2 md:border-4 border-slate-50 shadow-inner bg-white">
               <GeometryBoard id={`board-${id}`} code={msg.geometry.jsxgraph_code} />
             </div>
 
-            <div className="p-5 bg-brand-50/50 rounded-[1.5rem] border border-brand-100/50 relative overflow-hidden group">
+            <div className="p-4 md:p-5 bg-brand-50/50 rounded-2xl md:rounded-[1.5rem] border border-brand-100/50 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <BrainCircuit className="w-12 h-12 text-brand-600" />
+                <BrainCircuit className="w-10 h-10 md:w-12 md:h-12 text-brand-600" />
               </div>
-              <span className="font-bold text-brand-700 block mb-3 text-[11px] uppercase tracking-[0.15em] flex items-center gap-2">
+              <span className="font-bold text-brand-700 block mb-2 md:mb-3 text-[10px] md:text-[11px] uppercase tracking-[0.15em] flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                 Ghi chú từ Thầy
               </span>
-              <div className="markdown-body text-[15px] text-slate-600 font-medium leading-relaxed italic">
+              <div className="markdown-body text-sm md:text-[15px] text-slate-600 font-medium leading-relaxed italic">
                 <ReactMarkdown 
                   remarkPlugins={[remarkMath]} 
                   rehypePlugins={[rehypeKatex]}
@@ -299,6 +302,8 @@ export default function App() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [showImageMenu, setShowImageMenu] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("gemini_api_keys", JSON.stringify(geminiKeys));
@@ -340,6 +345,32 @@ export default function App() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const triggerCheer = () => {
+    // Confetti effect
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
+
+    // Sound effect
+    const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3");
+    audio.volume = 0.3;
+    audio.play().catch(e => console.log("Audio play failed", e));
   };
 
   useEffect(() => {
@@ -440,6 +471,11 @@ export default function App() {
     setSelectedImage(null);
     setIsLoading(true);
 
+    // Play send sound
+    const sendAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3");
+    sendAudio.volume = 0.2;
+    sendAudio.play().catch(e => console.log("Audio play failed", e));
+
     try {
       let responseText = "";
       let extractedName = null;
@@ -485,6 +521,13 @@ export default function App() {
           if (currentIdx !== selectedKeyIdx && selectedKeyIdx !== null) {
             setSelectedKeyIdx(currentIdx);
           }
+
+          // Check for positive feedback to trigger cheer
+          const positiveKeywords = ["giỏi lắm", "chính xác", "khen em", "tuyệt vời", "đúng rồi"];
+          if (positiveKeywords.some(word => result.text.toLowerCase().includes(word))) {
+            triggerCheer();
+          }
+
           break;
         } catch (err) {
           console.error(`Lỗi với key ${currentIdx}:`, err);
@@ -496,6 +539,11 @@ export default function App() {
       if (!success) {
         throw new Error(errorMsg || "Không thể kết nối với AI.");
       }
+
+      // Play arrival sound
+      const arrivalAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3");
+      arrivalAudio.volume = 0.2;
+      arrivalAudio.play().catch(e => console.log("Audio play failed", e));
 
       const tutorMessage: Message = { 
         role: "model", 
@@ -567,26 +615,26 @@ export default function App() {
       </AnimatePresence>
 
       {/* Header */}
-      <header className="flex items-center justify-between px-5 py-4 md:px-8 md:py-6 bg-white border-b border-slate-100 z-10">
-        <div className="flex items-center gap-3 md:gap-4">
-          <div className="p-2.5 md:p-3 bg-brand-50 rounded-2xl shadow-sm rotate-3">
-            <GraduationCap className="w-6 h-6 md:w-7 md:h-7 text-brand-600 -rotate-3" />
+      <header className="sticky top-0 flex items-center justify-between px-4 py-3 md:px-8 md:py-6 bg-white/90 backdrop-blur-md border-b border-slate-100 z-40 shadow-sm">
+        <div className="flex items-center gap-2.5 md:gap-4">
+          <div className="p-2 md:p-3 bg-brand-50 rounded-xl md:rounded-2xl shadow-sm rotate-3">
+            <GraduationCap className="w-5 h-5 md:w-7 md:h-7 text-brand-600 -rotate-3" />
           </div>
           <div>
-            <h1 className="font-bold text-lg md:text-xl text-slate-800 tracking-tight leading-tight">
+            <h1 className="font-bold text-base md:text-xl text-slate-800 tracking-tight leading-tight">
               {state.userName ? `Chào, ${state.userName}!` : "Gia sư Socratic"}
             </h1>
-            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-0.5">
-              <div className="flex items-center gap-1.5 px-2 py-0.5 bg-brand-50 rounded-full">
-                <BrainCircuit className="w-3 h-3 text-brand-600" />
-                <span className="text-[10px] md:text-[11px] font-bold text-brand-700 uppercase tracking-wider">
+            <div className="flex flex-wrap gap-x-2 md:gap-x-3 gap-y-1 mt-0.5">
+              <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 bg-brand-50 rounded-full">
+                <BrainCircuit className="w-2.5 h-2.5 md:w-3 md:h-3 text-brand-600" />
+                <span className="text-[9px] md:text-[11px] font-bold text-brand-700 uppercase tracking-wider">
                   {levelLabels[state.level]}
                 </span>
               </div>
               {state.grade && (
-                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-accent-50 rounded-full">
-                  <BookOpen className="w-3 h-3 text-accent-600" />
-                  <span className="text-[10px] md:text-[11px] font-bold text-accent-700 uppercase tracking-wider">
+                <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 bg-accent-50 rounded-full">
+                  <BookOpen className="w-2.5 h-2.5 md:w-3 md:h-3 text-accent-600" />
+                  <span className="text-[9px] md:text-[11px] font-bold text-accent-700 uppercase tracking-wider">
                     {state.grade} • {state.subject}
                   </span>
                 </div>
@@ -598,14 +646,14 @@ export default function App() {
         <div className="flex items-center gap-1 md:gap-2">
           <button 
             onClick={() => setShowSettings(!showSettings)}
-            className={`p-2.5 rounded-xl transition-all ${showSettings ? "bg-brand-600 text-white shadow-lg shadow-brand-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
+            className={`p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all ${showSettings ? "bg-brand-600 text-white shadow-lg shadow-brand-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
             title="Cài đặt"
           >
             <Settings2 className="w-5 h-5 md:w-6 md:h-6" />
           </button>
           <button 
             onClick={resetTutor}
-            className="p-2.5 text-slate-400 hover:bg-slate-50 hover:text-slate-600 rounded-xl transition-all"
+            className="p-2 md:p-2.5 text-slate-400 hover:bg-slate-50 hover:text-slate-600 rounded-lg md:rounded-xl transition-all"
             title="Làm mới phiên học"
           >
             <RefreshCw className="w-5 h-5 md:w-6 md:h-6" />
@@ -622,18 +670,18 @@ export default function App() {
             exit={{ height: 0, opacity: 0 }}
             className="bg-white border-b border-slate-100 overflow-hidden shadow-sm relative z-20"
           >
-            <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <BrainCircuit className="w-4 h-4" />
+            <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              <div className="space-y-4 md:space-y-6">
+                <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <BrainCircuit className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   Trình độ học tập
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 md:gap-2">
                   {(['beginner', 'intermediate', 'advanced'] as Level[]).map((l) => (
                     <button
                       key={l}
                       onClick={() => setLevel(l)}
-                      className={`px-5 py-2.5 rounded-2xl text-sm font-bold transition-all ${
+                      className={`px-4 py-2 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-[11px] md:text-sm font-bold transition-all ${
                         state.level === l 
                           ? "bg-brand-600 text-white shadow-lg shadow-brand-100" 
                           : "bg-slate-50 text-slate-500 hover:bg-slate-100"
@@ -644,19 +692,19 @@ export default function App() {
                   ))}
                 </div>
 
-                <div className="pt-6 border-t border-slate-50">
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 mb-4">
-                    <User className="w-4 h-4" />
+                <div className="pt-4 md:pt-6 border-t border-slate-50">
+                  <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 mb-3 md:mb-4">
+                    <User className="w-3.5 h-3.5 md:w-4 md:h-4" />
                     Thông tin học sinh
                   </h3>
-                  <div className="p-4 bg-slate-50 rounded-[1.5rem] flex items-center justify-between border border-slate-100">
+                  <div className="p-3 md:p-4 bg-slate-50 rounded-2xl md:rounded-[1.5rem] flex items-center justify-between border border-slate-100">
                     <div>
-                      <p className="text-sm font-bold text-slate-800">{state.userName}</p>
-                      <p className="text-xs text-slate-500 font-medium">{state.grade} • {state.subject}</p>
+                      <p className="text-xs md:text-sm font-bold text-slate-800">{state.userName}</p>
+                      <p className="text-[10px] md:text-xs text-slate-500 font-medium">{state.grade} • {state.subject}</p>
                     </div>
                     <button 
                       onClick={() => setState(prev => ({ ...prev, isSetupComplete: false }))}
-                      className="text-[11px] font-bold text-brand-600 hover:text-brand-700 px-4 py-2 bg-white rounded-xl shadow-sm transition-all active:scale-95"
+                      className="text-[10px] md:text-[11px] font-bold text-brand-600 hover:text-brand-700 px-3 py-1.5 md:px-4 md:py-2 bg-white rounded-lg md:rounded-xl shadow-sm transition-all active:scale-95"
                     >
                       Thay đổi
                     </button>
@@ -664,45 +712,45 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <Key className="w-4 h-4" />
+              <div className="space-y-4 md:space-y-6">
+                <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <Key className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   Gemini API Keys
                 </h3>
                 
-                <div className="space-y-2 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-2 max-h-[140px] md:max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
                   {geminiKeys.map((key, idx) => (
                     <div 
                       key={idx} 
-                      className={`flex items-center gap-3 p-3 rounded-2xl border-2 transition-all cursor-pointer ${
+                      className={`flex items-center gap-2.5 md:gap-3 p-2.5 md:p-3 rounded-xl md:rounded-2xl border-2 transition-all cursor-pointer ${
                         selectedKeyIdx === idx 
                           ? "bg-brand-50 border-brand-200" 
                           : "bg-white border-slate-50 hover:border-slate-100"
                       }`}
                       onClick={() => setSelectedKeyIdx(idx)}
                     >
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      <div className={`w-4 h-4 md:w-5 md:h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedKeyIdx === idx ? "border-brand-600 bg-brand-600" : "border-slate-200"
                       }`}>
-                        {selectedKeyIdx === idx && <div className="w-2 h-2 bg-white rounded-full" />}
+                        {selectedKeyIdx === idx && <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full" />}
                       </div>
-                      <div className="flex-1 truncate font-mono text-xs font-medium text-slate-500">
-                        {key.substring(0, 12)}...{key.substring(key.length - 6)}
+                      <div className="flex-1 truncate font-mono text-[10px] md:text-xs font-medium text-slate-500">
+                        {key.substring(0, 8)}...{key.substring(key.length - 4)}
                       </div>
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
                           removeGeminiKey(idx);
                         }}
-                        className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                        className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg md:rounded-xl transition-all"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
                       </button>
                     </div>
                   ))}
                   {geminiKeys.length === 0 && (
-                    <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
-                      <p className="text-xs text-slate-400 font-medium">Chưa có Gemini API key nào được lưu.</p>
+                    <div className="p-4 bg-slate-50 rounded-xl md:rounded-2xl border border-dashed border-slate-200 text-center">
+                      <p className="text-[10px] md:text-xs text-slate-400 font-medium">Chưa có Gemini API key nào được lưu.</p>
                     </div>
                   )}
                 </div>
@@ -745,27 +793,27 @@ export default function App() {
       </AnimatePresence>
 
       {/* Chat Area */}
-      <main className="flex-1 overflow-y-auto p-5 md:p-8 space-y-6 md:space-y-8 bg-[#fcfdfe] relative">
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-5 md:space-y-8 bg-[#fcfdfe] relative">
         {/* Subtle background pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#0d9488 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#7c3aed 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
         {state.history.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6 relative z-10">
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-5 md:space-y-6 relative z-10">
             <div className="relative">
               <div className="absolute inset-0 bg-brand-200 blur-3xl opacity-30 animate-pulse" />
-              <div className="relative p-6 bg-brand-50 rounded-[2.5rem] text-brand-600 shadow-inner rotate-3">
-                <BookOpen className="w-12 h-12 md:w-16 md:h-16 -rotate-3" />
+              <div className="relative p-5 md:p-6 bg-brand-50 rounded-[2rem] md:rounded-[2.5rem] text-brand-600 shadow-inner rotate-3">
+                <BookOpen className="w-10 h-10 md:w-16 md:h-16 -rotate-3" />
               </div>
             </div>
             <div className="max-w-sm px-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">Sẵn sàng học chưa?</h2>
-              <p className="text-sm md:text-base text-slate-500 mt-3 font-medium leading-relaxed">
+              <h2 className="text-xl md:text-3xl font-bold text-slate-800 tracking-tight">Sẵn sàng học chưa?</h2>
+              <p className="text-xs md:text-base text-slate-500 mt-2 md:mt-3 font-medium leading-relaxed">
                 Nhập một bài tập hoặc gửi hình ảnh, Thầy sẽ giúp em giải quyết từng bước một theo cách dễ hiểu nhất.
               </p>
             </div>
-            <div className="flex flex-wrap justify-center gap-2 mt-4">
+            <div className="flex flex-wrap justify-center gap-1.5 md:gap-2 mt-2 md:mt-4">
               {["Giải toán lớp 9", "Học Tiếng Anh", "Bài tập Vật lý"].map((tag) => (
-                <span key={tag} className="px-4 py-2 bg-white border border-slate-100 rounded-2xl text-xs font-bold text-slate-400 shadow-sm">
+                <span key={tag} className="px-3 py-1.5 md:px-4 md:py-2 bg-white border border-slate-100 rounded-xl md:rounded-2xl text-[10px] md:text-xs font-bold text-slate-400 shadow-sm">
                   #{tag}
                 </span>
               ))}
@@ -887,21 +935,71 @@ export default function App() {
               Công thức
             </button>
             
-            <input 
-              type="file" 
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
-              className="hidden"
-            />
-            <button 
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className={`p-2.5 rounded-2xl transition-all border-2 ${selectedImage ? "bg-accent-50 border-accent-200 text-accent-600" : "text-slate-400 border-slate-50 hover:bg-slate-50 hover:text-slate-600"}`}
-              title="Gửi hình ảnh bài tập"
-            >
-              <ImageIcon className="w-5 h-5" />
-            </button>
+            <div className="relative">
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+              <input 
+                type="file" 
+                ref={cameraInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+              />
+              <button 
+                type="button"
+                onClick={() => setShowImageMenu(!showImageMenu)}
+                className={`p-2.5 rounded-2xl transition-all border-2 ${selectedImage ? "bg-accent-50 border-accent-200 text-accent-600" : "text-slate-400 border-slate-50 hover:bg-slate-50 hover:text-slate-600"}`}
+                title="Gửi hình ảnh bài tập"
+              >
+                <ImageIcon className="w-5 h-5" />
+              </button>
+
+              <AnimatePresence>
+                {showImageMenu && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setShowImageMenu(false)} 
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                      className="absolute bottom-full left-0 mb-3 z-50 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 min-w-[160px]"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          cameraInputRef.current?.click();
+                          setShowImageMenu(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-sm"
+                      >
+                        <Camera className="w-5 h-5 text-brand-600" />
+                        Chụp ảnh
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          fileInputRef.current?.click();
+                          setShowImageMenu(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-sm"
+                      >
+                        <Upload className="w-5 h-5 text-accent-600" />
+                        Tải ảnh lên
+                      </button>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -955,13 +1053,13 @@ export default function App() {
               <div className="overflow-y-auto max-h-[40vh] md:max-h-none pr-1 custom-scrollbar">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                   {/* Numbers & Basic Operators */}
-                  <div className="md:col-span-5 grid grid-cols-4 gap-2">
+                  <div className="md:col-span-5 grid grid-cols-4 gap-1 md:gap-2">
                     {MATH_GROUPS[0].symbols.map((s) => (
                       <button
                         key={s.label}
                         type="button"
                         onClick={() => insertMathSymbol(s.value)}
-                        className={`h-11 md:h-12 flex items-center justify-center rounded-2xl text-lg font-bold transition-all active:scale-90 shadow-sm border-b-4 ${
+                        className={`h-9 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl text-sm md:text-lg font-bold transition-all active:scale-90 shadow-sm border-b-4 ${
                           s.type === "operator" 
                             ? "bg-brand-600 text-white border-brand-800 hover:bg-brand-500" 
                             : s.type === "variable"
@@ -975,15 +1073,15 @@ export default function App() {
                   </div>
 
                   {/* Advanced Functions */}
-                  <div className="md:col-span-4 flex flex-col gap-3">
+                  <div className="md:col-span-4 flex flex-col gap-2 md:gap-3">
                     <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">{MATH_GROUPS[1].name}</span>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-1.5 md:gap-2">
                       {MATH_GROUPS[1].symbols.map((s) => (
                         <button
                           key={s.label}
                           type="button"
                           onClick={() => insertMathSymbol(s.value)}
-                          className="h-10 md:h-11 flex items-center justify-center bg-slate-800/50 border-b-4 border-slate-950 rounded-2xl text-sm font-bold text-slate-300 hover:bg-slate-800 transition-all active:scale-90"
+                          className="h-9 md:h-11 flex items-center justify-center bg-slate-800/50 border-b-4 border-slate-950 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold text-slate-300 hover:bg-slate-800 transition-all active:scale-90"
                         >
                           {s.label}
                         </button>
@@ -992,15 +1090,15 @@ export default function App() {
                   </div>
 
                   {/* Formulas */}
-                  <div className="md:col-span-3 flex flex-col gap-3">
+                  <div className="md:col-span-3 flex flex-col gap-2 md:gap-3">
                     <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">{MATH_GROUPS[2].name}</span>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1.5 md:gap-2">
                       {MATH_GROUPS[2].symbols.map((s) => (
                         <button
                           key={s.label}
                           type="button"
                           onClick={() => insertMathSymbol(s.value)}
-                          className="h-10 md:h-11 flex items-center justify-center bg-brand-900/20 border-b-4 border-brand-950 rounded-2xl text-[11px] font-bold text-brand-300 hover:bg-brand-900/40 transition-all active:scale-90"
+                          className="h-9 md:h-11 flex items-center justify-center bg-brand-900/20 border-b-4 border-brand-950 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-bold text-brand-300 hover:bg-brand-900/40 transition-all active:scale-90"
                         >
                           {s.label}
                         </button>
@@ -1024,17 +1122,17 @@ export default function App() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Hỏi Thầy bất cứ điều gì về bài tập này..."
-              className="w-full px-6 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-[2rem] focus:border-brand-200 focus:bg-white outline-none transition-all font-medium text-slate-800 shadow-inner relative z-10"
+              placeholder="Hỏi Thầy bất cứ điều gì..."
+              className="w-full px-5 py-3.5 md:px-6 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl md:rounded-[2rem] focus:border-brand-200 focus:bg-white outline-none transition-all font-medium text-sm md:text-base text-slate-800 shadow-inner relative z-10"
               disabled={isLoading}
             />
           </div>
           <button 
             type="submit"
             disabled={(!input.trim() && !selectedImage) || isLoading}
-            className="p-4 md:p-5 bg-brand-600 text-white rounded-[1.5rem] hover:bg-brand-700 disabled:opacity-50 disabled:scale-95 transition-all shadow-xl shadow-brand-100 active:scale-90 relative z-10"
+            className="p-3.5 md:p-5 bg-brand-600 text-white rounded-2xl md:rounded-[1.5rem] hover:bg-brand-700 disabled:opacity-50 disabled:scale-95 transition-all shadow-xl shadow-brand-100 active:scale-90 relative z-10"
           >
-            <Send className={`w-6 h-6 ${isLoading ? "animate-pulse" : ""}`} />
+            <Send className={`w-5 h-5 md:w-6 md:h-6 ${isLoading ? "animate-pulse" : ""}`} />
           </button>
         </form>
       </div>
