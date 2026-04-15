@@ -622,7 +622,7 @@ export default function App() {
           </div>
           <div>
             <h1 className="font-bold text-base md:text-xl text-slate-800 tracking-tight leading-tight">
-              {state.userName ? `Chào, ${state.userName}!` : "Gia sư Socratic"}
+              {state.userName ? `Chào, ${state.userName}!` : "Gia sư Socratic (Thầy)"}
             </h1>
             <div className="flex flex-wrap gap-x-2 md:gap-x-3 gap-y-1 mt-0.5">
               <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 bg-brand-50 rounded-full">
