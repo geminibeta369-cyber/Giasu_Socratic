@@ -18,7 +18,9 @@ import {
   Camera,
   Upload,
   Youtube,
-  Play
+  Play,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
@@ -93,7 +95,6 @@ const MATH_GROUPS = [
       { label: "lim", value: "\\lim_{x \\to \\infty}", type: "formula" },
       { label: "∞", value: "\\infty", type: "formula" },
       { label: "$...$", value: "$$", type: "formula" },
-      { label: "$$...$$", value: "$$$$", type: "formula" },
     ]
   }
 ];
@@ -114,23 +115,23 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
     <motion.div 
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="w-full max-w-md p-6 md:p-8 bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] border border-slate-100 relative overflow-hidden"
+      className="w-full max-w-md p-5 md:p-8 bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] border border-slate-100 relative overflow-hidden"
     >
       {/* Decorative background elements */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-50 rounded-full blur-3xl opacity-50" />
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent-50 rounded-full blur-3xl opacity-50" />
 
       <div className="relative z-10">
-        <div className="flex justify-center mb-6 md:mb-8">
-          <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-brand-50 to-brand-200 rounded-3xl flex items-center justify-center shadow-inner rotate-3">
-            <GraduationCap className="w-10 h-10 md:w-12 md:h-12 text-brand-600 -rotate-3" />
+        <div className="flex justify-center mb-4 md:mb-8">
+          <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-brand-50 to-brand-200 rounded-3xl flex items-center justify-center shadow-inner rotate-3">
+            <GraduationCap className="w-8 h-8 md:w-12 md:h-12 text-brand-600 -rotate-3" />
           </div>
         </div>
         
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 text-center mb-2 tracking-tight">Chào mừng em!</h2>
-        <p className="text-slate-500 text-center mb-6 md:mb-10 text-xs md:text-sm font-medium">Hãy cho Thầy biết một chút về em để Thầy có thể hỗ trợ tốt nhất nhé.</p>
+        <h2 className="text-xl md:text-3xl font-bold text-slate-800 text-center mb-1 md:mb-2 tracking-tight">Chào mừng em!</h2>
+        <p className="text-slate-500 text-center mb-5 md:mb-10 text-[11px] md:text-sm font-medium px-4">Hãy cho Thầy biết một chút về em để Thầy có thể hỗ trợ tốt nhất nhé.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
           <div className="space-y-1.5 md:space-y-2">
             <label className="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] ml-1">Tên của em</label>
             <input
@@ -139,7 +140,7 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ví dụ: Minh Anh"
-              className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium placeholder:text-slate-300 text-sm md:text-base"
+              className="w-full px-4 py-3 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium placeholder:text-slate-300 text-sm md:text-base shadow-sm"
               required
             />
           </div>
@@ -151,7 +152,7 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
                 <select
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}
-                  className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer text-sm md:text-base"
+                  className="w-full px-4 py-3 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer text-sm md:text-base shadow-sm"
                 >
                   {[...Array(12)].map((_, i) => (
                     <option key={i} value={`Lớp ${i + 1}`}>Lớp {i + 1}</option>
@@ -169,7 +170,7 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
                 <select
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer text-sm md:text-base"
+                  className="w-full px-4 py-3 md:px-5 md:py-4 bg-slate-50/50 border-2 border-slate-100 rounded-xl md:rounded-2xl focus:border-brand-400 focus:bg-white transition-all outline-none text-slate-800 font-medium appearance-none cursor-pointer text-sm md:text-base shadow-sm"
                 >
                   <option value="Toán học">Toán học</option>
                   <option value="Vật lý">Vật lý</option>
@@ -186,21 +187,21 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
           <button
             type="submit"
             disabled={!name.trim()}
-            className="w-full py-4 md:py-5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl md:rounded-2xl shadow-[0_20px_40px_-10px_rgba(124,58,237,0.3)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none mt-2 md:mt-4 flex items-center justify-center gap-2 md:gap-3 group text-sm md:text-base"
+            className="w-full py-3.5 md:py-5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl md:rounded-2xl shadow-[0_20px_40px_-10px_rgba(124,58,237,0.3)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none mt-2 md:mt-4 flex items-center justify-center gap-2 md:gap-3 group text-sm md:text-base"
           >
             Bắt đầu học ngay
             <ChevronRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
           </button>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-3 md:mt-4">
             <a 
-              href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" 
+              href="https://www.youtube.com/watch?v=2PivCPuNliU" 
               target="_blank" 
               rel="noreferrer"
               className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 hover:text-brand-600 transition-colors"
             >
               <Youtube className="w-4 h-4 text-red-500" />
-              Chưa có API Key? Xem hướng dẫn tại đây
+              Chưa có API Key? Xem hướng dẫn
             </a>
           </div>
         </form>
@@ -213,7 +214,7 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex gap-2.5 md:gap-5 max-w-full md:max-w-[90%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+    <div className={`flex gap-2.5 md:gap-5 max-w-[95%] md:max-w-[90%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
       <div className={`flex-shrink-0 w-8 h-8 md:w-12 md:h-12 rounded-xl md:rounded-[1.25rem] flex items-center justify-center shadow-sm relative overflow-hidden ${
         isUser ? "bg-brand-600 text-white" : "bg-white border border-slate-100 text-brand-600"
       }`}>
@@ -227,7 +228,7 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
         )}
       </div>
       
-      <div className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-sm space-y-3 md:space-y-5 relative ${
+      <div className={`p-3.5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-sm space-y-3 md:space-y-5 relative overflow-hidden ${
         isUser 
           ? "bg-brand-600 text-white rounded-tr-none shadow-brand-100/50" 
           : "bg-white border border-slate-50 text-slate-800 rounded-tl-none shadow-slate-100/50"
@@ -273,15 +274,15 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
               <GeometryBoard id={`board-${id}`} code={msg.geometry.jsxgraph_code} />
             </div>
 
-            <div className="p-4 md:p-5 bg-brand-50/50 rounded-2xl md:rounded-[1.5rem] border border-brand-100/50 relative overflow-hidden group">
+            <div className="p-3.5 md:p-5 bg-brand-50/50 rounded-2xl md:rounded-[1.5rem] border border-brand-100/50 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <BrainCircuit className="w-10 h-10 md:w-12 md:h-12 text-brand-600" />
+                <BrainCircuit className="w-8 h-8 md:w-12 md:h-12 text-brand-600" />
               </div>
-              <span className="font-bold text-brand-700 block mb-2 md:mb-3 text-[10px] md:text-[11px] uppercase tracking-[0.15em] flex items-center gap-2">
+              <span className="font-bold text-brand-700 block mb-2 md:mb-3 text-[9px] md:text-[11px] uppercase tracking-[0.15em] flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                 Ghi chú từ Thầy
               </span>
-              <div className="markdown-body text-sm md:text-[15px] text-slate-600 font-medium leading-relaxed italic">
+              <div className="markdown-body text-[13px] md:text-[15px] text-slate-600 font-medium leading-relaxed italic">
                 <ReactMarkdown 
                   remarkPlugins={[remarkMath]} 
                   rehypePlugins={[rehypeKatex]}
@@ -318,6 +319,40 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [showImageMenu, setShowImageMenu] = useState(false);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(() => {
+    const saved = localStorage.getItem("is_sound_enabled");
+    return saved !== null ? saved === "true" : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("is_sound_enabled", isSoundEnabled.toString());
+  }, [isSoundEnabled]);
+
+  const playSound = (type: 'send' | 'arrival' | 'cheer') => {
+    if (!isSoundEnabled) return;
+
+    const sounds = {
+      send: [
+        "https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3",
+        "https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"
+      ],
+      arrival: [
+        "https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3",
+        "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
+      ],
+      cheer: [
+        "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3",
+        "https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3",
+        "https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3"
+      ]
+    };
+
+    const playlist = sounds[type];
+    const randomIndex = Math.floor(Math.random() * playlist.length);
+    const audio = new Audio(playlist[randomIndex]);
+    audio.volume = type === 'cheer' ? 0.3 : 0.2;
+    audio.play().catch(e => console.log("Audio play failed", e));
+  };
 
   useEffect(() => {
     localStorage.setItem("gemini_api_keys", JSON.stringify(geminiKeys));
@@ -382,14 +417,38 @@ export default function App() {
     }, 250);
 
     // Sound effect
-    const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3");
-    audio.volume = 0.3;
-    audio.play().catch(e => console.log("Audio play failed", e));
+    playSound('cheer');
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [state.history, isLoading]);
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      // Don't intercept if user is typing in the API key field
+      if (document.activeElement?.tagName === 'TEXTAREA') return;
+
+      const items = e.clipboardData?.items;
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") !== -1) {
+            const file = items[i].getAsFile();
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                setSelectedImage(reader.result as string);
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -486,9 +545,7 @@ export default function App() {
     setIsLoading(true);
 
     // Play send sound
-    const sendAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3");
-    sendAudio.volume = 0.2;
-    sendAudio.play().catch(e => console.log("Audio play failed", e));
+    playSound('send');
 
     try {
       let responseText = "";
@@ -555,9 +612,7 @@ export default function App() {
       }
 
       // Play arrival sound
-      const arrivalAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3");
-      arrivalAudio.volume = 0.2;
-      arrivalAudio.play().catch(e => console.log("Audio play failed", e));
+      playSound('arrival');
 
       const tutorMessage: Message = { 
         role: "model", 
@@ -658,6 +713,13 @@ export default function App() {
         </div>
         
         <div className="flex items-center gap-1 md:gap-2">
+          <button 
+            onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+            className={`p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all ${isSoundEnabled ? "text-brand-600 bg-brand-50" : "text-slate-400 hover:bg-slate-50"}`}
+            title={isSoundEnabled ? "Tắt âm thanh" : "Bật âm thanh"}
+          >
+            {isSoundEnabled ? <Volume2 className="w-5 h-5 md:w-6 md:h-6" /> : <VolumeX className="w-5 h-5 md:w-6 md:h-6" />}
+          </button>
           <button 
             onClick={() => setShowSettings(!showSettings)}
             className={`p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all ${showSettings ? "bg-brand-600 text-white shadow-lg shadow-brand-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
@@ -940,7 +1002,7 @@ export default function App() {
       </main>
 
       {/* Input Area */}
-      <div className="p-4 md:p-6 bg-white border-t border-slate-50 pb-safe relative z-30">
+      <div className="p-3 md:p-6 bg-white border-t border-slate-100 pb-safe relative z-30">
         {/* Floating selected image preview */}
         <AnimatePresence>
           {selectedImage && (
@@ -948,21 +1010,21 @@ export default function App() {
               initial={{ y: 20, opacity: 0, scale: 0.8 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 20, opacity: 0, scale: 0.8 }}
-              className="absolute bottom-full left-6 mb-4 z-40"
+              className="absolute bottom-full left-4 md:left-6 mb-3 md:mb-4 z-40"
             >
               <div className="relative group">
                 <div className="absolute inset-0 bg-brand-400 blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
                 <img 
                   src={selectedImage} 
-                  className="h-24 md:h-32 w-auto rounded-[1.5rem] border-4 border-white shadow-2xl object-cover relative z-10"
+                  className="h-20 md:h-32 w-auto rounded-xl md:rounded-[1.5rem] border-2 md:border-4 border-white shadow-2xl object-cover relative z-10"
                   alt="Preview"
                   referrerPolicy="no-referrer"
                 />
                 <button 
                   onClick={() => setSelectedImage(null)}
-                  className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 shadow-xl hover:bg-red-600 transition-all active:scale-90 z-20"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 shadow-xl hover:bg-red-600 transition-all active:scale-90 z-20"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
             </motion.div>
@@ -994,20 +1056,21 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Toolbar */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+        {/* Interaction Section */}
+        <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+          <div className="flex items-center gap-1.5 md:gap-2">
             <button 
               type="button"
               onClick={() => setShowMathToolbar(!showMathToolbar)}
-              className={`px-4 py-2 rounded-2xl flex items-center gap-2.5 transition-all font-bold text-[11px] uppercase tracking-wider border-2 ${
+              className={`h-10 px-3 md:px-4 md:py-2 rounded-xl md:rounded-2xl flex items-center gap-2 transition-all font-bold text-[10px] md:text-[11px] uppercase tracking-wider border-2 ${
                 showMathToolbar 
                   ? "bg-brand-600 text-white border-brand-600 shadow-lg shadow-brand-100" 
-                  : "bg-white text-slate-500 border-slate-100 hover:border-brand-200"
+                  : "bg-slate-50 text-slate-500 border-slate-50 hover:border-brand-200"
               }`}
             >
-              <Calculator className="w-4 h-4" />
-              Công thức
+              <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Công thức</span>
+              <span className="sm:hidden">Toán</span>
             </button>
             
             <div className="relative">
@@ -1029,10 +1092,10 @@ export default function App() {
               <button 
                 type="button"
                 onClick={() => setShowImageMenu(!showImageMenu)}
-                className={`p-2.5 rounded-2xl transition-all border-2 ${selectedImage ? "bg-accent-50 border-accent-200 text-accent-600" : "text-slate-400 border-slate-50 hover:bg-slate-50 hover:text-slate-600"}`}
-                title="Gửi hình ảnh bài tập"
+                className={`w-10 h-10 flex items-center justify-center rounded-xl md:rounded-2xl transition-all border-2 ${selectedImage ? "bg-accent-50 border-accent-200 text-accent-600" : "bg-slate-50 text-slate-400 border-slate-50 hover:bg-slate-100 hover:text-slate-600"}`}
+                title="Gửi hình ảnh (Ctrl+V)"
               >
-                <ImageIcon className="w-5 h-5" />
+                <ImageIcon className="w-4 h-4 md:w-5 md:h-5" />
               </button>
 
               <AnimatePresence>
@@ -1054,9 +1117,9 @@ export default function App() {
                           cameraInputRef.current?.click();
                           setShowImageMenu(false);
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-sm"
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-xs"
                       >
-                        <Camera className="w-5 h-5 text-brand-600" />
+                        <Camera className="w-4 h-4 text-brand-600" />
                         Chụp ảnh
                       </button>
                       <button
@@ -1065,9 +1128,9 @@ export default function App() {
                           fileInputRef.current?.click();
                           setShowImageMenu(false);
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-sm"
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-xs"
                       >
-                        <Upload className="w-5 h-5 text-accent-600" />
+                        <Upload className="w-4 h-4 text-accent-600" />
                         Tải ảnh lên
                       </button>
                     </motion.div>
@@ -1077,17 +1140,17 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            {input && (
-              <button 
-                onClick={clearInput}
-                className="p-2.5 text-slate-300 hover:text-red-400 transition-colors"
-                title="Xóa tất cả"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            )}
-          </div>
+          <div className="flex-1 invisible" />
+
+          {input && (
+            <button 
+              onClick={clearInput}
+              className="p-2 text-slate-300 hover:text-red-400 transition-colors"
+              title="Xóa tất cả"
+            >
+              <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+          )}
         </div>
 
         {/* Calculator-style Math Toolbar */}
@@ -1197,7 +1260,7 @@ export default function App() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Hỏi Thầy bất cứ điều gì..."
+              placeholder="Hỏi Thầy bất cứ điều gì (Ctrl+V để dán ảnh)..."
               className="w-full px-5 py-3.5 md:px-6 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl md:rounded-[2rem] focus:border-brand-200 focus:bg-white outline-none transition-all font-medium text-sm md:text-base text-slate-800 shadow-inner relative z-10"
               disabled={isLoading}
             />

@@ -111,9 +111,16 @@ VẼ HÌNH HÌNH HỌC (MỚI)
    });
 5. Tên điểm rõ ràng (A, B, C...).
 6. QUAN TRỌNG: Các điểm phải được cố định (fixed: true) để học sinh không vô tình làm lệch hình khi kéo thả. Ví dụ: board.create('point', [0,0], {name:'A', fixed: true});
-7. Nếu có góc vuông → vẽ ký hiệu góc vuông.
+7. Nếu có góc vuông → dùng board.create('angle', [A, B, C], {type: 'square', radius: 0.4}). Để kí hiệu nhỏ gọn, dễ nhìn hơn. TUYỆT ĐỐI KHÔNG sử dụng 'rightangle'.
 8. Hình phải cân đối, dễ nhìn.
 9. Luôn dùng: board.create('point', ...), board.create('line', ...), board.create('polygon', ...).
+10. Khi tạo góc, hãy đảm bảo thứ tự các điểm là ngược chiều kim đồng hồ để góc hiển thị đúng phía.
+11. VẼ HÌNH KHÔNG GIAN (3D in 2D):
+    - Sử dụng hình chiếu để mô phỏng 3D trên mặt phẳng 2D.
+    - Các nét khuất (cạnh không nhìn thấy) → dùng {dash: 2, strokeColor: '#cccccc'} hoặc {dash: 2}.
+    - Hình lăng trụ: Vẽ đa giác đáy, sau đó tạo các điểm tương ứng cho đáy trên (dịch chuyển tọa độ), nối các cạnh bên.
+    - Hình trụ: Sử dụng board.create('ellipse', [center, focus2, pointOnEllipse]) cho đáy. Nối 2 đường sinh ở 2 bên.
+    - Hình chóp/nón: Vẽ đáy, tạo điểm đỉnh S ở phía trên, nối S với các đỉnh/biên của đáy.
 
 =====================
 CÔNG THỨC TOÁN HỌC (QUAN TRỌNG)

@@ -22,7 +22,12 @@ const GeometryBoard: React.FC<GeometryBoardProps> = ({ id, code }) => {
     try {
       // The code from AI is expected to use 'box' as the ID, 
       // so we need to replace it with our unique ID.
-      const sanitizedCode = code.replace(/'box'/g, `'${id}'`).replace(/"box"/g, `"${id}"`);
+      let sanitizedCode = code.replace(/'box'/g, `'${id}'`).replace(/"box"/g, `"${id}"`);
+      
+      // Fix common AI hallucinations for JSXGraph types
+      // 1. rightangle -> angle with type: 'square'
+      sanitizedCode = sanitizedCode.replace(/'rightangle'/g, "'angle'");
+      sanitizedCode = sanitizedCode.replace(/"rightangle"/g, '"angle"');
       
       // Execute the code
       // We wrap it in a function to avoid global scope issues
@@ -82,13 +87,20 @@ const GeometryBoard: React.FC<GeometryBoardProps> = ({ id, code }) => {
       if (board.defaultAxes.y) board.defaultAxes.y.setAttribute({ visible: axis });
     }
 
-    // Toggle Grid
-    if (board.defaultAxes) {
-      if (board.defaultAxes.x && board.defaultAxes.x.grid) board.defaultAxes.x.grid.setAttribute({ visible: grid });
-      if (board.defaultAxes.y && board.defaultAxes.y.grid) board.defaultAxes.y.grid.setAttribute({ visible: grid });
-    }
+    // Toggle Grid - More robust way searching through objects
+    board.objectsList.forEach((obj: any) => {
+      // Check for grid elements
+      if (obj.elType === 'grid') {
+        obj.setAttribute({ visible: grid });
+      }
+      // Some versions attach grid to axes as attributes
+      if (obj.elType === 'axis') {
+        if (obj.grid) obj.grid.setAttribute({ visible: grid });
+      }
+    });
     
     board.unsuspendUpdate();
+    board.fullUpdate(); // Force a full update to reflect visibility changes
   };
 
   const toggleAxis = () => {
@@ -114,35 +126,35 @@ const GeometryBoard: React.FC<GeometryBoardProps> = ({ id, code }) => {
   };
 
   return (
-    <div className="w-full aspect-square max-w-full md:max-w-[400px] mx-auto bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative group">
+    <div className="w-full aspect-[4/3] md:aspect-square max-w-full md:max-w-[400px] mx-auto bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden relative group">
       <div id={id} className="w-full h-full jxgbox" />
       
       {/* Controls */}
-      <div className="absolute top-2 left-2 flex gap-1 md:gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-2 left-2 flex gap-1 md:gap-1.5 transition-opacity">
         <button 
           onClick={toggleAxis}
-          className={`p-1 md:p-1.5 rounded-lg border shadow-sm transition-all ${
+          className={`p-1.5 md:p-1.5 rounded-lg border shadow-sm transition-all ${
             showAxis ? 'bg-brand-600 text-white border-brand-700' : 'bg-white text-slate-400 border-slate-200'
           }`}
           title={showAxis ? "Ẩn hệ trục" : "Hiện hệ trục"}
         >
-          <Maximize className="w-3 h-3 md:w-3.5 md:h-3.5" />
+          <Maximize className="w-3.5 h-3.5 md:w-3.5 md:h-3.5" />
         </button>
         <button 
           onClick={toggleGrid}
-          className={`p-1 md:p-1.5 rounded-lg border shadow-sm transition-all ${
+          className={`p-1.5 md:p-1.5 rounded-lg border shadow-sm transition-all ${
             showGrid ? 'bg-brand-600 text-white border-brand-700' : 'bg-white text-slate-400 border-slate-200'
           }`}
           title={showGrid ? "Ẩn lưới" : "Hiện lưới"}
         >
-          <Grid3X3 className="w-3 h-3 md:w-3.5 md:h-3.5" />
+          <Grid3X3 className="w-3.5 h-3.5 md:w-3.5 md:h-3.5" />
         </button>
         <button 
           onClick={resetView}
-          className="p-1 md:p-1.5 rounded-lg border bg-white text-slate-400 border-slate-200 shadow-sm hover:text-brand-600 hover:border-brand-200 transition-all"
+          className="p-1.5 md:p-1.5 rounded-lg border bg-white text-slate-400 border-slate-200 shadow-sm hover:text-brand-600 hover:border-brand-200 transition-all"
           title="Đặt lại góc nhìn"
         >
-          <RotateCcw className="w-3 h-3 md:w-3.5 md:h-3.5" />
+          <RotateCcw className="w-3.5 h-3.5 md:w-3.5 md:h-3.5" />
         </button>
       </div>
 
