@@ -16,7 +16,9 @@ import {
   Trash2,
   Key,
   Camera,
-  Upload
+  Upload,
+  Youtube,
+  Play
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import ReactMarkdown from "react-markdown";
@@ -189,6 +191,18 @@ function SetupScreen({ onComplete }: { onComplete: (data: { name: string, grade:
             Bắt đầu học ngay
             <ChevronRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
           </button>
+
+          <div className="flex justify-center mt-4">
+            <a 
+              href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" 
+              target="_blank" 
+              rel="noreferrer"
+              className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 hover:text-brand-600 transition-colors"
+            >
+              <Youtube className="w-4 h-4 text-red-500" />
+              Chưa có API Key? Xem hướng dẫn tại đây
+            </a>
+          </div>
         </form>
       </div>
     </motion.div>
@@ -661,133 +675,194 @@ export default function App() {
         </div>
       </header>
 
-      {/* Settings Panel */}
+      {/* Settings Panel - Full Screen Modal */}
       <AnimatePresence>
         {showSettings && (
           <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="bg-white border-b border-slate-100 overflow-hidden shadow-sm relative z-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 md:p-8"
           >
-            <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              <div className="space-y-4 md:space-y-6">
-                <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <BrainCircuit className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                  Trình độ học tập
-                </h3>
-                <div className="flex flex-wrap gap-1.5 md:gap-2">
-                  {(['beginner', 'intermediate', 'advanced'] as Level[]).map((l) => (
-                    <button
-                      key={l}
-                      onClick={() => setLevel(l)}
-                      className={`px-4 py-2 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-[11px] md:text-sm font-bold transition-all ${
-                        state.level === l 
-                          ? "bg-brand-600 text-white shadow-lg shadow-brand-100" 
-                          : "bg-slate-50 text-slate-500 hover:bg-slate-100"
-                      }`}
-                    >
-                      {levelLabels[l]}
-                    </button>
-                  ))}
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="w-full max-w-4xl bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              {/* Modal Header */}
+              <div className="px-6 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-brand-100 rounded-xl text-brand-600">
+                    <Settings2 className="w-5 h-5 md:w-6 md:h-6" />
+                  </div>
+                  <h2 className="text-lg md:text-2xl font-bold text-slate-800 tracking-tight">Cài đặt hệ thống</h2>
                 </div>
+                <button 
+                  onClick={() => setShowSettings(false)}
+                  className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
 
-                <div className="pt-4 md:pt-6 border-t border-slate-50">
-                  <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 mb-3 md:mb-4">
-                    <User className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                    Thông tin học sinh
-                  </h3>
-                  <div className="p-3 md:p-4 bg-slate-50 rounded-2xl md:rounded-[1.5rem] flex items-center justify-between border border-slate-100">
-                    <div>
-                      <p className="text-xs md:text-sm font-bold text-slate-800">{state.userName}</p>
-                      <p className="text-[10px] md:text-xs text-slate-500 font-medium">{state.grade} • {state.subject}</p>
+              <div className="flex-1 overflow-y-auto p-6 md:p-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                  {/* Left Column: Student Info & Level */}
+                  <div className="space-y-8">
+                    <section>
+                      <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 mb-4">
+                        <BrainCircuit className="w-4 h-4" />
+                        Trình độ học tập
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {(['beginner', 'intermediate', 'advanced'] as Level[]).map((l) => (
+                          <button
+                            key={l}
+                            onClick={() => setLevel(l)}
+                            className={`flex-1 px-4 py-3 rounded-2xl text-xs md:text-sm font-bold transition-all border-2 ${
+                              state.level === l 
+                                ? "bg-brand-600 border-brand-600 text-white shadow-lg shadow-brand-100" 
+                                : "bg-white border-slate-100 text-slate-500 hover:border-slate-200"
+                            }`}
+                          >
+                            {levelLabels[l]}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+
+                    <section className="pt-8 border-t border-slate-100">
+                      <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2 mb-4">
+                        <User className="w-4 h-4" />
+                        Thông tin học sinh
+                      </h3>
+                      <div className="p-5 bg-slate-50 rounded-[2rem] flex items-center justify-between border border-slate-100">
+                        <div>
+                          <p className="text-sm md:text-base font-bold text-slate-800">{state.userName}</p>
+                          <p className="text-xs text-slate-500 font-medium">{state.grade} • {state.subject}</p>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            setState(prev => ({ ...prev, isSetupComplete: false }));
+                            setShowSettings(false);
+                          }}
+                          className="text-xs font-bold text-brand-600 hover:text-brand-700 px-4 py-2 bg-white rounded-xl shadow-sm transition-all active:scale-95"
+                        >
+                          Thay đổi
+                        </button>
+                      </div>
+                    </section>
+                  </div>
+
+                  {/* Right Column: API Keys */}
+                  <div className="space-y-6">
+                    <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                      <Key className="w-4 h-4" />
+                      Gemini API Keys
+                    </h3>
+
+                    {/* Quick Links Section - Prominent */}
+                    <div className="p-5 bg-brand-50 rounded-[2rem] border border-brand-100">
+                      <h4 className="text-[11px] font-bold text-brand-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        Hướng dẫn & Liên kết nhanh
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <a 
+                          href="https://aistudio.google.com/app/apikey" 
+                          target="_blank" 
+                          rel="noreferrer"
+                          className="flex items-center justify-center gap-3 py-3 bg-white border-2 border-brand-200 rounded-2xl text-xs font-bold text-brand-600 hover:bg-brand-50 transition-all shadow-sm"
+                        >
+                          <Key className="w-4 h-4" />
+                          Lấy Key tại đây
+                        </a>
+                        {/* DÁN LINK YOUTUBE CỦA BẠN VÀO ĐÂY */}
+                        <a 
+                          href="https://www.youtube.com/watch?v=2PivCPuNliU" 
+                          target="_blank" 
+                          rel="noreferrer"
+                          className="flex items-center justify-center gap-3 py-3 bg-red-50 border-2 border-red-100 rounded-2xl text-xs font-bold text-red-600 hover:bg-red-100 transition-all shadow-sm"
+                        >
+                          <Youtube className="w-4 h-4" />
+                          Video hướng dẫn
+                        </a>
+                      </div>
                     </div>
-                    <button 
-                      onClick={() => setState(prev => ({ ...prev, isSetupComplete: false }))}
-                      className="text-[10px] md:text-[11px] font-bold text-brand-600 hover:text-brand-700 px-3 py-1.5 md:px-4 md:py-2 bg-white rounded-lg md:rounded-xl shadow-sm transition-all active:scale-95"
-                    >
-                      Thay đổi
-                    </button>
+
+                    {/* Input Section */}
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Nhập API Key tại đây</label>
+                      <textarea 
+                        value={newKey}
+                        onChange={(e) => setNewKey(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                            e.preventDefault();
+                            addGeminiKey();
+                          }
+                        }}
+                        placeholder="Dán một hoặc nhiều API Key (mỗi dòng một key)..."
+                        rows={3}
+                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] text-sm focus:border-brand-400 focus:bg-white outline-none transition-all font-medium resize-none shadow-inner"
+                      />
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-[10px] text-slate-400 font-medium italic">
+                          Ctrl+Enter để thêm nhanh
+                        </span>
+                        <button 
+                          onClick={addGeminiKey}
+                          disabled={!newKey.trim()}
+                          className="px-8 py-3 bg-brand-600 text-white rounded-xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand-100 flex items-center justify-center gap-2 font-bold text-sm"
+                        >
+                          <Plus className="w-5 h-5" />
+                          Thêm vào danh sách
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Key List */}
+                    <div className="space-y-2 max-h-[180px] overflow-y-auto pr-2 custom-scrollbar border-t border-slate-100 pt-5">
+                      {geminiKeys.map((key, idx) => (
+                        <div 
+                          key={idx} 
+                          className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+                            selectedKeyIdx === idx 
+                              ? "bg-brand-50 border-brand-300 shadow-sm" 
+                              : "bg-white border-slate-50 hover:border-slate-100"
+                          }`}
+                          onClick={() => setSelectedKeyIdx(idx)}
+                        >
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                            selectedKeyIdx === idx ? "border-brand-600 bg-brand-600" : "border-slate-200"
+                          }`}>
+                            {selectedKeyIdx === idx && <div className="w-2 h-2 bg-white rounded-full" />}
+                          </div>
+                          <div className="flex-1 truncate font-mono text-xs font-medium text-slate-600">
+                            {key.substring(0, 12)}...{key.substring(key.length - 6)}
+                          </div>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeGeminiKey(idx);
+                            }}
+                            className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                      {geminiKeys.length === 0 && (
+                        <div className="p-8 bg-slate-50 rounded-[2rem] border border-dashed border-slate-200 text-center">
+                          <p className="text-xs text-slate-400 font-medium">Chưa có Gemini API key nào được lưu.</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div className="space-y-4 md:space-y-6">
-                <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <Key className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                  Gemini API Keys
-                </h3>
-                
-                <div className="space-y-2 max-h-[140px] md:max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
-                  {geminiKeys.map((key, idx) => (
-                    <div 
-                      key={idx} 
-                      className={`flex items-center gap-2.5 md:gap-3 p-2.5 md:p-3 rounded-xl md:rounded-2xl border-2 transition-all cursor-pointer ${
-                        selectedKeyIdx === idx 
-                          ? "bg-brand-50 border-brand-200" 
-                          : "bg-white border-slate-50 hover:border-slate-100"
-                      }`}
-                      onClick={() => setSelectedKeyIdx(idx)}
-                    >
-                      <div className={`w-4 h-4 md:w-5 md:h-5 rounded-full border-2 flex items-center justify-center ${
-                        selectedKeyIdx === idx ? "border-brand-600 bg-brand-600" : "border-slate-200"
-                      }`}>
-                        {selectedKeyIdx === idx && <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full" />}
-                      </div>
-                      <div className="flex-1 truncate font-mono text-[10px] md:text-xs font-medium text-slate-500">
-                        {key.substring(0, 8)}...{key.substring(key.length - 4)}
-                      </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeGeminiKey(idx);
-                        }}
-                        className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg md:rounded-xl transition-all"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                      </button>
-                    </div>
-                  ))}
-                  {geminiKeys.length === 0 && (
-                    <div className="p-4 bg-slate-50 rounded-xl md:rounded-2xl border border-dashed border-slate-200 text-center">
-                      <p className="text-[10px] md:text-xs text-slate-400 font-medium">Chưa có Gemini API key nào được lưu.</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-2 pt-2">
-                  <textarea 
-                    value={newKey}
-                    onChange={(e) => setNewKey(e.target.value)}
-                    placeholder="Dán một hoặc nhiều API Key (mỗi key một dòng)..."
-                    rows={3}
-                    className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-50 rounded-2xl text-sm focus:border-brand-200 focus:bg-white outline-none transition-all font-medium resize-none"
-                  />
-                  <button 
-                    onClick={addGeminiKey}
-                    disabled={!newKey.trim()}
-                    className="w-full py-3 bg-brand-600 text-white rounded-2xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand-100 flex items-center justify-center gap-2 font-bold"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Thêm API Key
-                  </button>
-                </div>
-
-                <div className="mt-6 p-5 bg-brand-50/50 rounded-[1.5rem] border border-brand-100/50">
-                  <h4 className="text-[11px] font-bold text-brand-700 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    Hướng dẫn lấy API Key
-                  </h4>
-                  <ul className="space-y-2 text-xs text-slate-600 font-medium list-decimal pl-4">
-                    <li>Truy cập <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-brand-600 hover:underline">Google AI Studio</a>.</li>
-                    <li>Nhấn nút <b>"Create API key"</b>.</li>
-                    <li>Chọn dự án Google Cloud của bạn (hoặc tạo mới).</li>
-                    <li>Sao chép mã API Key và dán vào ô bên trên.</li>
-                    <li>Bạn có thể dán nhiều key cùng lúc, mỗi key một dòng để Thầy tự động chuyển đổi khi cần.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
