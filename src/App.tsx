@@ -248,7 +248,7 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
             remarkPlugins={[remarkMath]} 
             rehypePlugins={[rehypeKatex]}
           >
-            {msg.text}
+            {msg.text.replace(/\\n/g, "\n")}
           </ReactMarkdown>
         </div>
 
