@@ -252,7 +252,7 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
           </ReactMarkdown>
         </div>
 
-        {msg.geometry && (
+        {msg.geometry && msg.geometry.jsxgraph_code && msg.geometry.jsxgraph_code.trim().length > 0 && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -630,7 +630,7 @@ export default function App() {
       console.error("Lỗi khi lấy phản hồi từ gia sư:", error);
       const errorMessage: Message = {
         role: "model",
-        text: "Thầy đang gặp một chút khó khăn khi suy nghĩ. Em có thể thử kiểm tra lại API Key hoặc diễn đạt lại câu hỏi nhé."
+        text: "Thầy đang gặp một chút khó khăn khi kết nối. Vui lòng kiểm tra lại kết nối mạng hoặc đảm bảo Gemini API Key của em hợp lệ nhé.\n\nNếu chưa có, em có thể [nhấn vào đây để lấy Gemini API Key miễn phí](https://aistudio.google.com/app/apikey) và cấu hình trong phần Cài đặt."
       };
       setState(prev => ({
         ...prev,

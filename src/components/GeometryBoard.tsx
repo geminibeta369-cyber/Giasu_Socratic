@@ -31,8 +31,13 @@ const GeometryBoard: React.FC<GeometryBoardProps> = ({ id, code }) => {
       
       // Execute the code
       // We wrap it in a function to avoid global scope issues
-      const draw = new Function('JXG', sanitizedCode + '; return board;');
-      const board = draw(JXG);
+      // We try to return 'board' if defined, otherwise we fall back to finding it by its element ID
+      const draw = new Function('JXG', 'id', `
+        ${sanitizedCode}
+        if (typeof board !== 'undefined') return board;
+        return JXG.JSXGraph.getBoardByElementId(id);
+      `);
+      const board = draw(JXG, id);
       boardRef.current = board;
 
       // Initial state and extra options
