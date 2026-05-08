@@ -214,27 +214,27 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex gap-2.5 md:gap-5 max-w-[95%] md:max-w-[90%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
-      <div className={`flex-shrink-0 w-8 h-8 md:w-12 md:h-12 rounded-xl md:rounded-[1.25rem] flex items-center justify-center shadow-sm relative overflow-hidden ${
+    <div className={`flex gap-2 md:gap-4 max-w-[95%] md:max-w-[85%] ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+      <div className={`flex-shrink-0 w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shadow-sm relative overflow-hidden ${
         isUser ? "bg-brand-600 text-white" : "bg-white border border-slate-100 text-brand-600"
       }`}>
         {isUser ? (
-          <User className="w-4 h-4 md:w-6 md:h-6 relative z-10" />
+          <User className="w-3.5 h-3.5 md:w-5 md:h-5 relative z-10" />
         ) : (
           <>
             <div className="absolute inset-0 bg-brand-50 opacity-50" />
-            <Bot className="w-4 h-4 md:w-7 md:h-7 relative z-10" />
+            <Bot className="w-3.5 h-3.5 md:w-6 md:h-6 relative z-10" />
           </>
         )}
       </div>
       
-      <div className={`p-3.5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-sm space-y-3 md:space-y-5 relative overflow-hidden ${
+      <div className={`p-2.5 md:p-4 rounded-2xl md:rounded-3xl shadow-sm space-y-2 md:space-y-4 relative overflow-hidden ${
         isUser 
           ? "bg-brand-600 text-white rounded-tr-none shadow-brand-100/50" 
           : "bg-white border border-slate-50 text-slate-800 rounded-tl-none shadow-slate-100/50"
       }`}>
         {msg.image && (
-          <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white/10 max-w-sm shadow-xl">
+          <div className="rounded-lg md:rounded-xl overflow-hidden border-2 border-white/10 max-w-sm shadow-lg">
             <img 
               src={msg.image} 
               alt="Bài tập" 
@@ -243,7 +243,7 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
             />
           </div>
         )}
-        <div className={`markdown-body ${isUser ? "text-white prose-invert" : "text-slate-700"} font-medium leading-relaxed text-sm md:text-[15px]`}>
+        <div className={`markdown-body ${isUser ? "text-white prose-invert" : "text-slate-700"} font-medium leading-relaxed text-[13px] md:text-[14px]`}>
           <ReactMarkdown 
             remarkPlugins={[remarkMath]} 
             rehypePlugins={[rehypeKatex]}
@@ -256,33 +256,33 @@ function MessageBubble({ msg, id }: { msg: Message; id: string }) {
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-slate-50 space-y-4 md:space-y-6"
+            className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-slate-50 space-y-3 md:space-y-4"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 md:gap-3 text-brand-600 font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">
-                <div className="p-1.5 md:p-2 bg-brand-50 rounded-lg md:rounded-xl">
-                  <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <div className="flex items-center gap-2 text-brand-600 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
+                <div className="p-1 md:p-1.5 bg-brand-50 rounded-lg">
+                  <Calculator className="w-3 h-3 md:w-3.5 md:h-3.5" />
                 </div>
                 Hình vẽ minh họa
               </div>
-              <div className="px-2 md:px-3 py-0.5 md:py-1 bg-brand-50 text-brand-600 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider">
+              <div className="px-1.5 md:px-2 py-0.5 bg-brand-50 text-brand-600 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-wider">
                 Interactive
               </div>
             </div>
 
-            <div className="rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-2 md:border-4 border-slate-50 shadow-inner bg-white">
+            <div className="rounded-xl md:rounded-2xl overflow-hidden border-2 border-slate-50 shadow-inner bg-white">
               <GeometryBoard id={`board-${id}`} code={msg.geometry.jsxgraph_code} />
             </div>
 
-            <div className="p-3.5 md:p-5 bg-brand-50/50 rounded-2xl md:rounded-[1.5rem] border border-brand-100/50 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <BrainCircuit className="w-8 h-8 md:w-12 md:h-12 text-brand-600" />
+            <div className="p-3 md:p-4 bg-brand-50/50 rounded-xl md:rounded-2xl border border-brand-100/50 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                <BrainCircuit className="w-6 h-6 md:w-8 md:h-8 text-brand-600" />
               </div>
-              <span className="font-bold text-brand-700 block mb-2 md:mb-3 text-[9px] md:text-[11px] uppercase tracking-[0.15em] flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
+              <span className="font-bold text-brand-700 block mb-1 md:mb-2 text-[8px] md:text-[10px] uppercase tracking-[0.15em] flex items-center gap-2">
+                <div className="w-1 h-1 rounded-full bg-brand-500" />
                 Ghi chú từ Thầy
               </span>
-              <div className="markdown-body text-[13px] md:text-[15px] text-slate-600 font-medium leading-relaxed italic">
+              <div className="markdown-body text-[12px] md:text-[14px] text-slate-600 font-medium leading-relaxed italic">
                 <ReactMarkdown 
                   remarkPlugins={[remarkMath]} 
                   rehypePlugins={[rehypeKatex]}
@@ -674,7 +674,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-dvh w-full md:max-w-4xl md:mx-auto bg-white md:shadow-[0_0_100px_-20px_rgba(0,0,0,0.1)] overflow-hidden md:border-x border-slate-100 relative">
+    <div className="flex flex-col h-dvh w-full md:max-w-3xl md:mx-auto bg-white md:shadow-[0_0_100px_-20px_rgba(0,0,0,0.1)] overflow-hidden md:border-x border-slate-100 relative">
       <AnimatePresence>
         {!state.isSetupComplete && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
@@ -684,26 +684,26 @@ export default function App() {
       </AnimatePresence>
 
       {/* Header */}
-      <header className="sticky top-0 flex items-center justify-between px-4 py-3 md:px-8 md:py-6 bg-white/90 backdrop-blur-md border-b border-slate-100 z-40 shadow-sm">
-        <div className="flex items-center gap-2.5 md:gap-4">
-          <div className="p-2 md:p-3 bg-brand-50 rounded-xl md:rounded-2xl shadow-sm rotate-3">
-            <GraduationCap className="w-5 h-5 md:w-7 md:h-7 text-brand-600 -rotate-3" />
+      <header className="sticky top-0 flex items-center justify-between px-4 py-2 md:px-6 md:py-3 bg-white/90 backdrop-blur-md border-b border-slate-100 z-40 shadow-sm">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="p-1.5 md:p-2 bg-brand-50 rounded-lg md:rounded-xl shadow-sm rotate-3">
+            <GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-brand-600 -rotate-3" />
           </div>
           <div>
-            <h1 className="font-bold text-base md:text-xl text-slate-800 tracking-tight leading-tight">
-              {state.userName ? `Chào, ${state.userName}!` : "Gia sư Socratic (Thầy)"}
+            <h1 className="font-bold text-sm md:text-lg text-slate-800 tracking-tight leading-tight">
+              {state.userName ? `Chào, ${state.userName}!` : "Gia sư Socratic"}
             </h1>
-            <div className="flex flex-wrap gap-x-2 md:gap-x-3 gap-y-1 mt-0.5">
-              <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 bg-brand-50 rounded-full">
-                <BrainCircuit className="w-2.5 h-2.5 md:w-3 md:h-3 text-brand-600" />
-                <span className="text-[9px] md:text-[11px] font-bold text-brand-700 uppercase tracking-wider">
+            <div className="flex flex-wrap gap-x-1.5 md:gap-x-2 gap-y-0.5 mt-0.5">
+              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-brand-50 rounded-full">
+                <BrainCircuit className="w-2.5 h-2.5 text-brand-600" />
+                <span className="text-[8px] md:text-[10px] font-bold text-brand-700 uppercase tracking-wider">
                   {levelLabels[state.level]}
                 </span>
               </div>
               {state.grade && (
-                <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 bg-accent-50 rounded-full">
-                  <BookOpen className="w-2.5 h-2.5 md:w-3 md:h-3 text-accent-600" />
-                  <span className="text-[9px] md:text-[11px] font-bold text-accent-700 uppercase tracking-wider">
+                <div className="flex items-center gap-1 px-1.5 py-0.5 bg-accent-50 rounded-full">
+                  <BookOpen className="w-2.5 h-2.5 text-accent-600" />
+                  <span className="text-[8px] md:text-[10px] font-bold text-accent-700 uppercase tracking-wider">
                     {state.grade} • {state.subject}
                   </span>
                 </div>
@@ -712,27 +712,27 @@ export default function App() {
           </div>
         </div>
         
-        <div className="flex items-center gap-1 md:gap-2">
+        <div className="flex items-center gap-1 md:gap-1.5">
           <button 
             onClick={() => setIsSoundEnabled(!isSoundEnabled)}
-            className={`p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all ${isSoundEnabled ? "text-brand-600 bg-brand-50" : "text-slate-400 hover:bg-slate-50"}`}
+            className={`p-1.5 md:p-2 rounded-lg md:rounded-xl transition-all ${isSoundEnabled ? "text-brand-600 bg-brand-50" : "text-slate-400 hover:bg-slate-50"}`}
             title={isSoundEnabled ? "Tắt âm thanh" : "Bật âm thanh"}
           >
-            {isSoundEnabled ? <Volume2 className="w-5 h-5 md:w-6 md:h-6" /> : <VolumeX className="w-5 h-5 md:w-6 md:h-6" />}
+            {isSoundEnabled ? <Volume2 className="w-4 h-4 md:w-5 md:h-5" /> : <VolumeX className="w-4 h-4 md:w-5 md:h-5" />}
           </button>
           <button 
             onClick={() => setShowSettings(!showSettings)}
-            className={`p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all ${showSettings ? "bg-brand-600 text-white shadow-lg shadow-brand-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
+            className={`p-1.5 md:p-2 rounded-lg md:rounded-xl transition-all ${showSettings ? "bg-brand-600 text-white shadow-lg shadow-brand-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
             title="Cài đặt"
           >
-            <Settings2 className="w-5 h-5 md:w-6 md:h-6" />
+            <Settings2 className="w-4 h-4 md:w-5 md:h-5" />
           </button>
           <button 
             onClick={resetTutor}
-            className="p-2 md:p-2.5 text-slate-400 hover:bg-slate-50 hover:text-slate-600 rounded-lg md:rounded-xl transition-all"
+            className="p-1.5 md:p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600 rounded-lg md:rounded-xl transition-all"
             title="Làm mới phiên học"
           >
-            <RefreshCw className="w-5 h-5 md:w-6 md:h-6" />
+            <RefreshCw className="w-4 h-4 md:w-5 md:h-5" />
           </button>
         </div>
       </header>
@@ -930,7 +930,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Chat Area */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-5 md:space-y-8 bg-[#fcfdfe] relative">
+      <main className="flex-1 overflow-y-auto p-3 md:p-5 space-y-4 md:space-y-6 bg-[#fcfdfe] relative">
         {/* Subtle background pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#7c3aed 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
@@ -1002,7 +1002,7 @@ export default function App() {
       </main>
 
       {/* Input Area */}
-      <div className="p-3 md:p-6 bg-white border-t border-slate-100 pb-safe relative z-30">
+      <div className="p-2 md:p-4 bg-white border-t border-slate-100 pb-safe relative z-30">
         {/* Floating selected image preview */}
         <AnimatePresence>
           {selectedImage && (
@@ -1010,21 +1010,21 @@ export default function App() {
               initial={{ y: 20, opacity: 0, scale: 0.8 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 20, opacity: 0, scale: 0.8 }}
-              className="absolute bottom-full left-4 md:left-6 mb-3 md:mb-4 z-40"
+              className="absolute bottom-full left-3 md:left-5 mb-2 md:mb-3 z-40"
             >
               <div className="relative group">
                 <div className="absolute inset-0 bg-brand-400 blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
                 <img 
                   src={selectedImage} 
-                  className="h-20 md:h-32 w-auto rounded-xl md:rounded-[1.5rem] border-2 md:border-4 border-white shadow-2xl object-cover relative z-10"
+                  className="h-16 md:h-24 w-auto rounded-xl md:rounded-2xl border-2 md:border-3 border-white shadow-2xl object-cover relative z-10"
                   alt="Preview"
                   referrerPolicy="no-referrer"
                 />
                 <button 
                   onClick={() => setSelectedImage(null)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 shadow-xl hover:bg-red-600 transition-all active:scale-90 z-20"
+                  className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-1 shadow-xl hover:bg-red-600 transition-all active:scale-90 z-20"
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-3 h-3" />
                 </button>
               </div>
             </motion.div>
@@ -1038,13 +1038,13 @@ export default function App() {
               initial={{ height: 0, opacity: 0, y: 10 }}
               animate={{ height: "auto", opacity: 1, y: 0 }}
               exit={{ height: 0, opacity: 0, y: 10 }}
-              className="mb-4 p-4 bg-brand-50/30 border-2 border-brand-100/50 rounded-[1.5rem] overflow-hidden shadow-inner"
+              className="mb-2 p-3 md:p-4 bg-brand-50/30 border-2 border-brand-100/50 rounded-[1rem] md:rounded-[1.5rem] overflow-hidden shadow-inner"
             >
-              <div className="text-[10px] font-bold text-brand-600 uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+              <div className="text-[9px] font-bold text-brand-600 uppercase tracking-[0.2em] mb-1 flex items-center gap-1.5">
+                <div className="w-1 h-1 rounded-full bg-brand-500 animate-pulse" />
                 Xem trước công thức
               </div>
-              <div className="markdown-body text-slate-700 font-medium">
+              <div className="markdown-body text-slate-700 font-medium text-xs md:text-sm">
                 <ReactMarkdown 
                   remarkPlugins={[remarkMath]} 
                   rehypePlugins={[rehypeKatex]}
@@ -1056,148 +1056,178 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Interaction Section */}
-        <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+        {/* Main Input Controls Row */}
+        <div className="flex flex-col gap-2 md:gap-3">
+          {/* Interaction Section: Tool Buttons & Previews */}
           <div className="flex items-center gap-1.5 md:gap-2">
-            <button 
-              type="button"
-              onClick={() => setShowMathToolbar(!showMathToolbar)}
-              className={`h-10 px-3 md:px-4 md:py-2 rounded-xl md:rounded-2xl flex items-center gap-2 transition-all font-bold text-[10px] md:text-[11px] uppercase tracking-wider border-2 ${
-                showMathToolbar 
-                  ? "bg-brand-600 text-white border-brand-600 shadow-lg shadow-brand-100" 
-                  : "bg-slate-50 text-slate-500 border-slate-50 hover:border-brand-200"
-              }`}
-            >
-              <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline">Công thức</span>
-              <span className="sm:hidden">Toán</span>
-            </button>
-            
-            <div className="relative">
-              <input 
-                type="file" 
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-              <input 
-                type="file" 
-                ref={cameraInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                capture="environment"
-                className="hidden"
-              />
+            <div className="flex items-center gap-1 md:gap-1.5">
               <button 
                 type="button"
-                onClick={() => setShowImageMenu(!showImageMenu)}
-                className={`w-10 h-10 flex items-center justify-center rounded-xl md:rounded-2xl transition-all border-2 ${selectedImage ? "bg-accent-50 border-accent-200 text-accent-600" : "bg-slate-50 text-slate-400 border-slate-50 hover:bg-slate-100 hover:text-slate-600"}`}
-                title="Gửi hình ảnh (Ctrl+V)"
+                onClick={() => setShowMathToolbar(!showMathToolbar)}
+                className={`h-8 px-2.5 md:px-4 md:py-1.5 rounded-lg md:rounded-xl flex items-center gap-1.5 transition-all font-bold text-[9px] md:text-[10px] uppercase tracking-wider border-2 ${
+                  showMathToolbar 
+                    ? "bg-brand-600 text-white border-brand-600 shadow-lg shadow-brand-100" 
+                    : "bg-slate-50 text-slate-500 border-slate-50 hover:border-brand-200"
+                }`}
               >
-                <ImageIcon className="w-4 h-4 md:w-5 md:h-5" />
+                <Calculator className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                <span className="hidden sm:inline">Công thức</span>
+                <span className="sm:hidden">Toán</span>
               </button>
+              
+              <div className="relative">
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <input 
+                  type="file" 
+                  ref={cameraInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowImageMenu(!showImageMenu)}
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg md:rounded-xl transition-all border-2 ${selectedImage ? "bg-accent-50 border-accent-200 text-accent-600" : "bg-slate-50 text-slate-400 border-slate-50 hover:bg-slate-100 hover:text-slate-600"}`}
+                  title="Gửi hình ảnh (Ctrl+V)"
+                >
+                  <ImageIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                </button>
 
-              <AnimatePresence>
-                {showImageMenu && (
-                  <>
-                    <div 
-                      className="fixed inset-0 z-40" 
-                      onClick={() => setShowImageMenu(false)} 
-                    />
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                      className="absolute bottom-full left-0 mb-3 z-50 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 min-w-[160px]"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          cameraInputRef.current?.click();
-                          setShowImageMenu(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-xs"
+                <AnimatePresence>
+                  {showImageMenu && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setShowImageMenu(false)} 
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                        className="absolute bottom-full left-0 mb-2 z-50 bg-white rounded-xl shadow-2xl border border-slate-100 p-1.5 min-w-[140px]"
                       >
-                        <Camera className="w-4 h-4 text-brand-600" />
-                        Chụp ảnh
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          fileInputRef.current?.click();
-                          setShowImageMenu(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-700 font-bold text-xs"
-                      >
-                        <Upload className="w-4 h-4 text-accent-600" />
-                        Tải ảnh lên
-                      </button>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            cameraInputRef.current?.click();
+                            setShowImageMenu(false);
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700 font-bold text-[10px]"
+                        >
+                          <Camera className="w-3.5 h-3.5 text-brand-600" />
+                          Chụp ảnh
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            fileInputRef.current?.click();
+                            setShowImageMenu(false);
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700 font-bold text-[10px]"
+                        >
+                          <Upload className="w-3.5 h-3.5 text-accent-600" />
+                          Tải ảnh lên
+                        </button>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
+
+            <div className="flex-1" />
+
+            {input && (
+              <button 
+                type="button"
+                onClick={clearInput}
+                className="p-1.5 text-slate-300 hover:text-red-400 transition-colors"
+                title="Xóa tất cả"
+              >
+                <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              </button>
+            )}
           </div>
 
-          <div className="flex-1 invisible" />
-
-          {input && (
+          {/* Form Row */}
+          <form 
+            onSubmit={handleSendMessage}
+            className="flex items-center gap-1.5 md:gap-2.5"
+          >
+            <div className="relative flex-1 group">
+              <div className="absolute inset-0 bg-brand-100 blur-xl opacity-0 group-focus-within:opacity-30 transition-opacity" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Hỏi Thầy bất cứ điều gì..."
+                className="w-full px-3.5 py-2 md:px-5 md:py-3 bg-slate-50 border-2 border-slate-50 rounded-xl md:rounded-[1.5rem] focus:border-brand-200 focus:bg-white outline-none transition-all font-medium text-xs md:text-sm text-slate-800 shadow-inner relative z-10"
+                disabled={isLoading}
+              />
+            </div>
             <button 
-              onClick={clearInput}
-              className="p-2 text-slate-300 hover:text-red-400 transition-colors"
-              title="Xóa tất cả"
+              type="submit"
+              disabled={(!input.trim() && !selectedImage) || isLoading}
+              className="p-2.5 md:p-3.5 bg-brand-600 text-white rounded-xl md:rounded-[1.25rem] hover:bg-brand-700 disabled:opacity-50 disabled:scale-95 transition-all shadow-lg active:scale-90 relative z-10"
             >
-              <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
+              <Send className={`w-4 h-4 md:w-5 md:h-5 ${isLoading ? "animate-pulse" : ""}`} />
             </button>
-          )}
+          </form>
         </div>
 
         {/* Calculator-style Math Toolbar */}
         <AnimatePresence>
           {showMathToolbar && (
             <motion.div 
-              initial={{ height: 0, opacity: 0, scale: 0.98 }}
-              animate={{ height: "auto", opacity: 1, scale: 1 }}
-              exit={{ height: 0, opacity: 0, scale: 0.98 }}
-              className="mb-4 bg-slate-900 rounded-[2rem] border border-slate-800 p-5 md:p-6 shadow-2xl overflow-hidden flex flex-col relative"
+              initial={{ height: 0, opacity: 0, y: 10 }}
+              animate={{ height: "auto", opacity: 1, y: 0 }}
+              exit={{ height: 0, opacity: 0, y: 10 }}
+              className="mt-3 bg-slate-900 rounded-[1rem] md:rounded-[1.5rem] border border-slate-800 p-3 md:p-4 shadow-2xl overflow-hidden flex flex-col relative"
             >
               {/* Decorative glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-brand-500 blur-md opacity-50" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-brand-500 blur-md opacity-30" />
 
-              <div className="flex justify-between items-center mb-5 flex-shrink-0">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
-                  Bàn phím toán học
+              <div className="flex justify-between items-center mb-3 flex-shrink-0">
+                <span className="text-[8px] md:text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-brand-500" />
+                  Bàn phím toán
                 </span>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5">
                   <button
                     type="button"
                     onClick={backspaceInput}
-                    className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-[11px] font-bold hover:bg-slate-700 transition-all active:scale-95 flex items-center gap-2 border border-slate-700"
+                    className="px-2.5 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-[9px] font-bold hover:bg-slate-700 transition-all active:scale-95 flex items-center gap-1.5 border border-slate-700"
                   >
-                    <RefreshCw className="w-3 h-3 rotate-180" /> Xóa
+                    <RefreshCw className="w-2.5 h-2.5 rotate-180" /> Xóa
                   </button>
                   <button
                     type="button"
                     onClick={clearInput}
-                    className="px-4 py-2 bg-red-900/30 text-red-400 rounded-xl text-[11px] font-bold hover:bg-red-900/50 transition-all active:scale-95 border border-red-900/50"
+                    className="px-2.5 py-1.5 bg-red-900/20 text-red-400 rounded-lg text-[9px] font-bold hover:bg-red-900/40 transition-all active:scale-95 border border-red-900/40"
                   >
                     AC
                   </button>
                 </div>
               </div>
 
-              <div className="overflow-y-auto max-h-[40vh] md:max-h-none pr-1 custom-scrollbar">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              <div className="overflow-y-auto max-h-[25vh] md:max-h-[35vh] pr-0.5 custom-scrollbar">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5">
                   {/* Numbers & Basic Operators */}
-                  <div className="md:col-span-5 grid grid-cols-4 gap-1 md:gap-2">
+                  <div className="md:col-span-5 grid grid-cols-4 gap-1 md:gap-1.5">
                     {MATH_GROUPS[0].symbols.map((s) => (
                       <button
                         key={s.label}
                         type="button"
                         onClick={() => insertMathSymbol(s.value)}
-                        className={`h-9 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl text-sm md:text-lg font-bold transition-all active:scale-90 shadow-sm border-b-4 ${
+                        className={`h-8 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl text-[10px] md:text-[15px] font-bold transition-all active:scale-90 shadow-sm border-b-2 md:border-b-4 ${
                           s.type === "operator" 
                             ? "bg-brand-600 text-white border-brand-800 hover:bg-brand-500" 
                             : s.type === "variable"
@@ -1211,15 +1241,15 @@ export default function App() {
                   </div>
 
                   {/* Advanced Functions */}
-                  <div className="md:col-span-4 flex flex-col gap-2 md:gap-3">
-                    <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">{MATH_GROUPS[1].name}</span>
-                    <div className="grid grid-cols-3 gap-1.5 md:gap-2">
+                  <div className="md:col-span-4 flex flex-col gap-1.5 md:gap-2">
+                    <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest ml-1">{MATH_GROUPS[1].name}</span>
+                    <div className="grid grid-cols-3 gap-1 md:gap-1.5">
                       {MATH_GROUPS[1].symbols.map((s) => (
                         <button
                           key={s.label}
                           type="button"
                           onClick={() => insertMathSymbol(s.value)}
-                          className="h-9 md:h-11 flex items-center justify-center bg-slate-800/50 border-b-4 border-slate-950 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold text-slate-300 hover:bg-slate-800 transition-all active:scale-90"
+                          className="h-8 md:h-9 flex items-center justify-center bg-slate-800/50 border-b-2 md:border-b-4 border-slate-950 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold text-slate-300 hover:bg-slate-800 transition-all active:scale-90"
                         >
                           {s.label}
                         </button>
@@ -1228,15 +1258,15 @@ export default function App() {
                   </div>
 
                   {/* Formulas */}
-                  <div className="md:col-span-3 flex flex-col gap-2 md:gap-3">
-                    <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">{MATH_GROUPS[2].name}</span>
-                    <div className="grid grid-cols-2 gap-1.5 md:gap-2">
+                  <div className="md:col-span-3 flex flex-col gap-1.5 md:gap-2">
+                    <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest ml-1">{MATH_GROUPS[2].name}</span>
+                    <div className="grid grid-cols-2 gap-1 md:gap-1.5">
                       {MATH_GROUPS[2].symbols.map((s) => (
                         <button
                           key={s.label}
                           type="button"
                           onClick={() => insertMathSymbol(s.value)}
-                          className="h-9 md:h-11 flex items-center justify-center bg-brand-900/20 border-b-4 border-brand-950 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-bold text-brand-300 hover:bg-brand-900/40 transition-all active:scale-90"
+                          className="h-8 md:h-9 flex items-center justify-center bg-brand-900/10 border-b-2 md:border-b-4 border-brand-950 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-bold text-brand-300 hover:bg-brand-900/30 transition-all active:scale-90"
                         >
                           {s.label}
                         </button>
@@ -1248,31 +1278,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        <form 
-          onSubmit={handleSendMessage}
-          className="relative flex items-center gap-3"
-        >
-          <div className="relative flex-1 group">
-            <div className="absolute inset-0 bg-brand-100 blur-xl opacity-0 group-focus-within:opacity-30 transition-opacity" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Hỏi Thầy bất cứ điều gì (Ctrl+V để dán ảnh)..."
-              className="w-full px-5 py-3.5 md:px-6 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl md:rounded-[2rem] focus:border-brand-200 focus:bg-white outline-none transition-all font-medium text-sm md:text-base text-slate-800 shadow-inner relative z-10"
-              disabled={isLoading}
-            />
-          </div>
-          <button 
-            type="submit"
-            disabled={(!input.trim() && !selectedImage) || isLoading}
-            className="p-3.5 md:p-5 bg-brand-600 text-white rounded-2xl md:rounded-[1.5rem] hover:bg-brand-700 disabled:opacity-50 disabled:scale-95 transition-all shadow-xl shadow-brand-100 active:scale-90 relative z-10"
-          >
-            <Send className={`w-5 h-5 md:w-6 md:h-6 ${isLoading ? "animate-pulse" : ""}`} />
-          </button>
-        </form>
       </div>
     </div>
   );
